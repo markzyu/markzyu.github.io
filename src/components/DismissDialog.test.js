@@ -13,13 +13,13 @@ const exampleRender = (show, child) => render(
 test('Shows dialog when asked to', () => {
   const { getByText } = exampleRender(true, 'test-abc');
   const txt = getByText(/test-abc/);
-  expect(txt).toBeInTheDocument();
+  expect(txt).toBeVisible();
 });
 
 test('Hides dialog when asked to', () => {
   const { queryByText } = exampleRender(false, 'test-abc');
   const txt = queryByText(/test-abc/);
-  expect(txt).toBeNull();
+  expect(txt).not.toBeVisible();
 });
 
 test('Sets title', () => {

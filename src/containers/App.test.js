@@ -12,8 +12,8 @@ const exampleApp = () => render(
   </Provider>
 );
 
-test('renders template', () => {
+test('renders ok', () => {
   const { getByText } = exampleApp();
-  const template = getByText("This is just a template");
-  expect(template).toBeInTheDocument();
+  const template = getByText("Throw an Error");
+  expect(template).toBeVisible();
 });

@@ -1,20 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Draggable from 'react-draggable';
 
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 
 const DismissDialog = props => {
+  const extras = {style: {border: 'none', maxWidth: '75%'}};
+  if (props.show) {
+    extras.open = true;
+    extras.onDragStart = console.log;
+  }
   return (
-    <Modal show={props.show} onHide={props.onDismiss} className="passwd-detail-modal">
-      <Modal.Header closeButton>{props.title}</Modal.Header>
-      <Modal.Body>
+    <Draggable handle='.title-bar'><dialog className="window" {...extras}>
+      <div className='title-bar'>
+        <div className="title-bar-text">{props.title}</div>
+        <div className='title-bar-controls'>
+          <button aria-label='Close' onClick={props.onDismiss}></button>
+        </div>
+      </div>
+      <div className='window-body'>
         {props.children}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={props.onDismiss}>Dismiss</Button>
-      </Modal.Footer>
-    </Modal>
+        <div className='field-row' style={{justifyContent: 'flex-end', marginTop: 5}}>
+          <button onClick={props.onDismiss}>Dismiss</button>
+        </div>
+      </div>
+    </dialog></Draggable>
   )
 };
 

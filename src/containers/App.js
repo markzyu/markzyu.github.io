@@ -2,14 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect, useDispatch} from 'react-redux';
 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-
 import ErrorDialog from './ErrorDialog.js';
 import './App.css';
 import UserAgreementDialog from './UserAgreementDialog.js';
-import { Button } from 'react-bootstrap';
 import { showError } from '../actions/index.js';
+import { DesktopIcon } from '../components/DesktopIcon.js';
+import { faBug } from '@fortawesome/free-solid-svg-icons';
 
 const App = props => {
   const dispatch = useDispatch();
@@ -17,20 +15,20 @@ const App = props => {
     try {
       undefined();
     } catch (err) {
-      console.log(err);
       dispatch(showError(err.toString()));
     }
   }
   return (
-    <Container>
-      <Row>
-        This is just a template
-      </Row>
+    <div>
+      <div style={{flexDirection: 'row'}}>
+        <div style={{flexDirection: 'column'}}>
+          <DesktopIcon icon={faBug} title='Throw an Error' onClick={throwError}/>
+        </div>
+      </div>
       <br/>
-      <Button onClick={throwError}>Throw an Error</Button>
       <ErrorDialog />
       <UserAgreementDialog />
-    </Container>
+    </div>
   );
 }
 

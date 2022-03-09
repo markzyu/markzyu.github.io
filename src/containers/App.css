@@ -1,9 +1,6 @@
-div[class*="col-"], div.col {
-  padding-left: 0.3em;
-  padding-right: 0.3em;
-}
-
 body {
-  padding-top: 0.3em;
-  padding-bottom: 0.3em;
+  background: transparent url("../../public/background1.jpg") no-repeat fixed center;
+  background-size: cover;
+  overflow: hidden;
+  margin: 0;
 }

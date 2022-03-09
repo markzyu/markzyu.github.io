@@ -25,7 +25,7 @@ const UADialog = props => {
         MIT License
         <br/>
         <br/>
-        Copyright (c) 2022 YOUR_NAME
+        Copyright (c) 2022 Zhongzhi "Mark" Yu
         <br/>
         <br/>
         Permission is hereby granted, free of charge, to any person obtaining a copy
