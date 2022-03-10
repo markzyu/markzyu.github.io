@@ -32,17 +32,17 @@ const App = props => {
         <div style={{flexDirection: 'column'}}>
           <DesktopIcon icon={faBug} title='Throw an Error' onClick={throwError}/>
           <DesktopIcon icon={faRecycle} title='Change Theme' onClick={changeTheme}/>
-          <DesktopIcon icon={faCircleInfo} title='Exhibit A' onClick={changeTheme}
-            style={{position: 'absolute', left: '30%', top: '30%'}} />
-          <DesktopIcon icon={faCircleInfo} title='Exhibit B' onClick={changeTheme}
-            style={{position: 'absolute', right: '30%', bottom: '30%'}} />
-          <DesktopIcon icon={faCircleInfo} title='Exhibit C' onClick={changeTheme}
-            style={{position: 'absolute', right: '30%', top: '30%'}} />
         </div>
       </div>
       <br/>
       <DesktopIcon icon={faCircleInfo} title='About me' onClick={changeTheme}
-        className="fixedAboutMe" nostyle={true} />
+        className="fixedAboutMe" noposition={true} />
+      <DesktopIcon icon={faCircleInfo} title='Exhibit A' onClick={changeTheme}
+        className="fixedExhibitA" noposition={true} />
+      <DesktopIcon icon={faCircleInfo} title='Exhibit B' onClick={changeTheme}
+        className="fixedExhibitB" noposition={true} />
+      <DesktopIcon icon={faCircleInfo} title='Exhibit C' onClick={changeTheme}
+        className="fixedExhibitC" noposition={true} />
       <ErrorDialog />
       <UserAgreementDialog />
     </div>

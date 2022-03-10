@@ -16,17 +16,23 @@ html, body, #root {
 }
 
 @media(min-aspect-ratio: 16/9) {
-  .fixedAboutMe {
+  .fixedAboutMe, .fixedExhibitA, .fixedExhibitB, .fixedExhibitC {
     display: flex;
-    position: absolute;
-    left: 41%;
-    top: 52%;
-    transform: translateX(-50%) translateY(-50%);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    overflow: hidden;
+    left: 0;
+    width: 100%;
+    top: 50%;
+    aspect-ratio: 16/9;
+    transform: translateY(-50%);
   }
 }
 
 @media(max-aspect-ratio: 16/9) {
-  .fixedAboutMe {
+  .fixedAboutMe, .fixedExhibitA, .fixedExhibitB, .fixedExhibitC {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -39,11 +45,27 @@ html, body, #root {
     aspect-ratio: 16/9;
     transform: translateX(-50%);
   }
+}
 
-  .fixedAboutMe > div {
-    margin-top: 3%;
-    margin-right: 17%;
-  }
+.fixedAboutMe > div {
+  margin-top: 3%;
+  margin-right: 17%;
+}
+
+.fixedExhibitA > div {
+  margin-bottom: 28%;
+  margin-right: 18%;
+}
+
+.fixedExhibitB > div {
+  margin-bottom: 12%;
+  margin-left: 4%;
+  opacity: 50%;
+}
+
+.fixedExhibitC > div {
+  margin-top: 32%;
+  margin-left: 34%;
 }
 
 button  {

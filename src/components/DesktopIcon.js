@@ -1,9 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const DesktopIcon = props => {
-    const {icon, title, style, nostyle, ...extraProps} = props;
-    const finalStyle = nostyle ? style : {
+    const {icon, title, style, noposition, ...extraProps} = props;
+    const finalStyle = noposition ? {
         ...style,
+        ...styles.container,
+    } : {
+        ...style,
+        ...styles.container,
         ...styles.overflowGuard,
     };
     return (
@@ -26,8 +30,10 @@ const styles = {
         marginTop: 15,
         marginLeft: 5, 
         marginRight: 5, 
+    },
+    container: {
         justifyContent: 'center', 
         overflow: 'hidden', 
         userSelect: 'none',
-    }
+    },
 };
