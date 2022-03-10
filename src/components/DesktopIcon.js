@@ -1,9 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const DesktopIcon = props => {
-    const {icon, title, ...extraProps} = props;
+    const {icon, title, style, nostyle, ...extraProps} = props;
+    const finalStyle = nostyle ? style : {
+        ...style,
+        ...styles.overflowGuard,
+    };
     return (
-        <div style={styles.overflowGuard} {...extraProps}>
+        <div style={finalStyle} {...extraProps}>
             <div style={{maxWidth: 50, textAlign: 'center', color: 'red'}}>
                 <FontAwesomeIcon icon={icon} fontSize={30} color='darkred' />
                 <br/>

@@ -7,7 +7,7 @@ import './App.css';
 import UserAgreementDialog from './UserAgreementDialog.js';
 import { setTheme, showError } from '../actions/index.js';
 import { DesktopIcon } from '../components/DesktopIcon.js';
-import { faBug, faRecycle } from '@fortawesome/free-solid-svg-icons';
+import { faBug, faCircleInfo, faRecycle } from '@fortawesome/free-solid-svg-icons';
 
 const App = props => {
   const dispatch = useDispatch();
@@ -26,15 +26,23 @@ const App = props => {
     }
   }
   return (
-    <div>
+    <div style={{height: '100%', width: '100%'}}>
       <link rel='stylesheet' type='text/css' href={props.themeCssPath} />
       <div style={{flexDirection: 'row'}}>
         <div style={{flexDirection: 'column'}}>
           <DesktopIcon icon={faBug} title='Throw an Error' onClick={throwError}/>
           <DesktopIcon icon={faRecycle} title='Change Theme' onClick={changeTheme}/>
+          <DesktopIcon icon={faCircleInfo} title='Exhibit A' onClick={changeTheme}
+            style={{position: 'absolute', left: '30%', top: '30%'}} />
+          <DesktopIcon icon={faCircleInfo} title='Exhibit B' onClick={changeTheme}
+            style={{position: 'absolute', right: '30%', bottom: '30%'}} />
+          <DesktopIcon icon={faCircleInfo} title='Exhibit C' onClick={changeTheme}
+            style={{position: 'absolute', right: '30%', top: '30%'}} />
         </div>
       </div>
       <br/>
+      <DesktopIcon icon={faCircleInfo} title='About me' onClick={changeTheme}
+        className="fixedAboutMe" nostyle={true} />
       <ErrorDialog />
       <UserAgreementDialog />
     </div>

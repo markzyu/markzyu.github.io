@@ -5,9 +5,45 @@ body {
   margin: 0;
 }
 
+html, body, #root {
+  width: 100%;
+  height: 100%;
+}
+
 .title-bar-text, [selects=none] {
   pointer-events: none;
   user-select: none;
+}
+
+@media(min-aspect-ratio: 16/9) {
+  .fixedAboutMe {
+    display: flex;
+    position: absolute;
+    left: 41%;
+    top: 52%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+}
+
+@media(max-aspect-ratio: 16/9) {
+  .fixedAboutMe {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    overflow: hidden;
+    top: 0;
+    height: 100%;
+    left: 50%;
+    aspect-ratio: 16/9;
+    transform: translateX(-50%);
+  }
+
+  .fixedAboutMe > div {
+    margin-top: 3%;
+    margin-right: 17%;
+  }
 }
 
 button  {
