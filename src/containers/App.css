@@ -4,3 +4,12 @@ body {
   overflow: hidden;
   margin: 0;
 }
+
+.title-bar-text, [selects=none] {
+  pointer-events: none;
+  user-select: none;
+}
+
+button  {
+  user-select: none;
+}

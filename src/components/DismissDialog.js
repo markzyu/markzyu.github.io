@@ -10,7 +10,7 @@ const DismissDialog = props => {
     extras.onDragStart = console.log;
   }
   return (
-    <Draggable handle='.title-bar'><dialog className="window" {...extras}>
+    <Draggable handle='.title-bar' cancel='.title-bar-controls'><dialog className="window" {...extras}>
       <div className='title-bar'>
         <div className="title-bar-text">{props.title}</div>
         <div className='title-bar-controls'>

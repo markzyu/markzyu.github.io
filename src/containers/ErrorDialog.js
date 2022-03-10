@@ -9,7 +9,7 @@ const ErrorDialog = props => {
   const sendClose = () => props.dispatch(dismissError());
   return (
     <DismissDialog title="Error Message" show={props.showError} onDismiss={sendClose} className="error-modal">
-      {props.errorMsg}
+      <span selects='none'>{props.errorMsg}</span>
     </DismissDialog>
   )
 };
