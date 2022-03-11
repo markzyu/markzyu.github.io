@@ -7,7 +7,7 @@ import './App.css';
 import UserAgreementDialog from './UserAgreementDialog.js';
 import { setTheme, showError } from '../actions/index.js';
 import { DesktopIcon } from '../components/DesktopIcon.js';
-import { faBug, faCircleInfo, faRecycle } from '@fortawesome/free-solid-svg-icons';
+import { faBoxArchive, faBug, faCalendarCheck, faCircleInfo, faRecycle, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 const App = props => {
   const dispatch = useDispatch();
@@ -36,12 +36,12 @@ const App = props => {
       </div>
       <br/>
       <DesktopIcon icon={faCircleInfo} title='About me' onClick={changeTheme}
-        className="fixedAboutMe" noposition={true} />
-      <DesktopIcon icon={faCircleInfo} title='Exhibit A' onClick={changeTheme}
-        className="fixedExhibitA" noposition={true} />
-      <DesktopIcon icon={faCircleInfo} title='Exhibit B' onClick={changeTheme}
-        className="fixedExhibitB" noposition={true} />
-      <DesktopIcon icon={faCircleInfo} title='Exhibit C' onClick={changeTheme}
+        className="fixedAboutMe" noposition={true} textColor='#71b1cd' iconColor='#71b1cd' />
+      <DesktopIcon icon={faCalendarCheck} title='Exhibit A' onClick={changeTheme}
+        className="fixedExhibitA" noposition={true} textColor='#3d8daf' iconColor='#3d8daf' />
+      <DesktopIcon icon={faBoxArchive} title='Exhibit B' onClick={changeTheme}
+        className="fixedExhibitB" noposition={true} textColor='#1d4454' iconColor='#1d4454' />
+      <DesktopIcon icon={faTrashCan} title='Exhibit C' onClick={changeTheme}
         className="fixedExhibitC" noposition={true} />
       <ErrorDialog />
       <UserAgreementDialog />
