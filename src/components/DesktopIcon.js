@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const DesktopIcon = props => {
-    const {icon, title, style, noposition, textColor, iconColor, ...extraProps} = props;
+    const {icon, title, style, noposition, textColor, iconColor, onClick, ...extraProps} = props;
     const finalStyle = noposition ? {
         ...style,
         ...styles.container,
@@ -10,11 +10,11 @@ export const DesktopIcon = props => {
         ...styles.container,
         ...styles.overflowGuard,
     };
-    const finalTextColor = textColor || 'red';
-    const finalIconColor = iconColor || 'darkred';
+    const finalTextColor = textColor || '#71b1cd';
+    const finalIconColor = iconColor || '#71b1cd';
     return (
         <div style={finalStyle} {...extraProps}>
-            <div style={{maxWidth: 50, textAlign: 'center', color: finalTextColor}}>
+            <div style={{maxWidth: 50, textAlign: 'center', color: finalTextColor, pointerEvents: 'all'}} onClick={onClick}>
                 <FontAwesomeIcon 
                     style={{filter: `drop-shadow(1px 1px 1px ${finalIconColor})`}}
                     icon={icon} fontSize={30} color={finalIconColor} />
@@ -39,5 +39,6 @@ const styles = {
         justifyContent: 'center', 
         overflow: 'hidden', 
         userSelect: 'none',
+        pointerEvents: 'none',
     },
 };

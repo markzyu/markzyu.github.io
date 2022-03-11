@@ -4,26 +4,30 @@ import Draggable from 'react-draggable';
 
 
 const DismissDialog = props => {
-  const extras = {style: {border: 'none', maxWidth: '75%'}};
+  const extras = {style: {border: 'none'}};
   if (props.show) {
     extras.open = true;
     extras.onDragStart = console.log;
   }
+  var className = 'window';
+  if (props.className) className += ' ' + props.className;
   return (
-    <Draggable handle='.title-bar' cancel='.title-bar-controls'><dialog className="window" {...extras}>
-      <div className='title-bar'>
-        <div className="title-bar-text">{props.title}</div>
-        <div className='title-bar-controls'>
-          <button aria-label='Close' onClick={props.onDismiss}></button>
+    <Draggable handle='.title-bar' cancel='.title-bar-controls'>
+      <dialog className={className} {...extras}>
+        <div className='title-bar'>
+          <div className="title-bar-text">{props.title}</div>
+          <div className='title-bar-controls'>
+            <button aria-label='Close' onClick={props.onDismiss}></button>
+          </div>
         </div>
-      </div>
-      <div className='window-body'>
-        {props.children}
-        <div className='field-row' style={{justifyContent: 'flex-end', marginTop: 5}}>
-          <button onClick={props.onDismiss}>Dismiss</button>
+        <div className='window-body'>
+          {props.children}
+          <div className='field-row' style={{justifyContent: 'flex-end', marginTop: 5}}>
+            <button onClick={props.onDismiss}>Dismiss</button>
+          </div>
         </div>
-      </div>
-    </dialog></Draggable>
+      </dialog>
+    </Draggable>
   )
 };
 

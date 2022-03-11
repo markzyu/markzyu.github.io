@@ -12,7 +12,7 @@ const UADialog = props => {
     props.dispatch(loadAgreementStatus(getAgreementRead()));
   };
   return (
-    <DismissDialog title="User Agreement" show={props.showAgreement} onDismiss={sendAgree} className="error-modal">
+    <DismissDialog title="User Agreement" show={props.showAgreement} onDismiss={sendAgree} className="large-modal">
         <em>By using this app, you agree to the following terms. If you do not agree, please DO NOT USE THIS APP.</em>
         <br/>
         <br/>

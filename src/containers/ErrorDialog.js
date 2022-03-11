@@ -8,7 +8,7 @@ import { dismissError } from '../actions';
 const ErrorDialog = props => {
   const sendClose = () => props.dispatch(dismissError());
   return (
-    <DismissDialog title="Error Message" show={props.showError} onDismiss={sendClose} className="error-modal">
+    <DismissDialog title="Error Message" show={props.showError} onDismiss={sendClose} className="medium-modal">
       <span selects='none'>{props.errorMsg}</span>
     </DismissDialog>
   )

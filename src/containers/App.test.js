@@ -14,6 +14,6 @@ const exampleApp = () => render(
 
 test('renders ok', () => {
   const { getByText } = exampleApp();
-  const template = getByText("Throw an Error");
+  const template = getByText("About me");
   expect(template).toBeVisible();
 });

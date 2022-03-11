@@ -10,8 +10,12 @@ html, body, #root {
   height: 100%;
 }
 
-.title-bar-text, [selects=none] {
+.title-bar-text, .noPointer, [selects=none] {
   pointer-events: none;
+  user-select: none;
+}
+
+.noSelects, [selects=some] {
   user-select: none;
 }
 
@@ -66,6 +70,14 @@ html, body, #root {
 .fixedExhibitC > div {
   margin-top: 32%;
   margin-left: 34%;
+}
+
+.medium-modal {
+  max-width: 33%;
+}
+
+.large-modal {
+  max-width: 75%;
 }
 
 button  {
