@@ -5,14 +5,14 @@ import Draggable from 'react-draggable';
 
 const DismissDialog = props => {
   const extras = {style: {border: 'none', zIndex: props.zIndex}};
+  const onMouseDown = props.show ? props.onPromote : undefined;
   if (props.show) {
     extras.open = true;
-    extras.onDragStart = console.log;
   }
   var className = 'window';
   if (props.className) className += ' ' + props.className;
   return (
-    <Draggable handle='.title-bar' cancel='.title-bar-controls'>
+    <Draggable handle='.title-bar' cancel='.title-bar-controls' onMouseDown={onMouseDown}>
       <dialog className={className} {...extras}>
         <div className='title-bar'>
           <div className="title-bar-text">{props.title}</div>

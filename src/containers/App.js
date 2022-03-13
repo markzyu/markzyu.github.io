@@ -35,6 +35,7 @@ const App = props => {
   };
   const setShow = (name) => () => helpSetShow(name, true);
   const dialogProp = (name) => ({
+    onPromote: () => helpSetShow(name, true),
     onDismiss: () => helpSetShow(name, false),
     show: visibleDialogs.has(name),
     zIndex: dialogOrders.indexOf(name),
