@@ -4,7 +4,7 @@ import Draggable from 'react-draggable';
 
 
 const DismissDialog = props => {
-  const extras = {style: {border: 'none'}};
+  const extras = {style: {border: 'none', zIndex: props.zIndex}};
   if (props.show) {
     extras.open = true;
     extras.onDragStart = console.log;

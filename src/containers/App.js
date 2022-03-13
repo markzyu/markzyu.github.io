@@ -16,13 +16,29 @@ import { ExhibitCDialog } from '../components/ExhibitCDialog.js';
 
 const App = props => {
   const dispatch = useDispatch();
-  const [showAboutMe, setShowAboutMe] = useState(false);
-  const [showCredits, setShowCredits] = useState(false);
-  const [showExhibitA, setShowExhibitA] = useState(false);
-  const [showExhibitB, setShowExhibitB] = useState(false);
-  const [showExhibitC, setShowExhibitC] = useState(false);
-  const anyShowing = showAboutMe || showCredits || props.showAgreement || props.showError
-    || showExhibitA || showExhibitB || showExhibitC; 
+  
+  // dialogOrders: last element in array shows up on top
+  const [dialogOrders, setDialogOrders] = useState([]);
+  const [visibleDialogs, setVisibleDialogs] = useState(new Set());
+  const anyShowing = visibleDialogs.size > 0 || props.showAgreement || props.showError;
+  const helpSetShow = (name, show) => {
+    var newVisible = new Set(visibleDialogs);
+    var newOrders = dialogOrders.filter(x => x !== name);
+    if (show) {
+      newVisible.add(name);
+      newOrders.push(name);
+    } else {
+      newVisible.delete(name);
+    }
+    setVisibleDialogs(newVisible);
+    setDialogOrders(newOrders);
+  };
+  const setShow = (name) => () => helpSetShow(name, true);
+  const dialogProp = (name) => ({
+    onDismiss: () => helpSetShow(name, false),
+    show: visibleDialogs.has(name),
+    zIndex: dialogOrders.indexOf(name),
+  });
   const changeTheme = () => {
     if (props.themeCssPath === 'https://unpkg.com/xp.css@0.2.3/dist/98.css') {
       dispatch(setTheme('https://unpkg.com/xp.css'));
@@ -35,24 +51,24 @@ const App = props => {
       <link rel='stylesheet' type='text/css' href={props.themeCssPath} />
       <div style={{flexDirection: 'row'}}>
         <div style={{flexDirection: 'column'}}>
-          <DesktopIcon icon={faCopyright} title='Credits' onClick={() => setShowCredits(true)}/>
+          <DesktopIcon icon={faCopyright} title='Credits' onClick={setShow('credits')}/>
           {anyShowing && <DesktopIcon icon={faRecycle} title='Change Theme' onClick={changeTheme}/>}
         </div>
       </div>
       <br/>
-      <DesktopIcon icon={faCircleInfo} title='About me' onClick={() => setShowAboutMe(true)}
+      <DesktopIcon icon={faCircleInfo} title='About me' onClick={setShow('about-me')}
         className="fixedAboutMe" noposition={true} textColor='#71b1cd' iconColor='#71b1cd' />
-      <DesktopIcon icon={faCalendarCheck} title='Exhibit A' onClick={() => setShowExhibitA(true)}
+      <DesktopIcon icon={faCalendarCheck} title='Exhibit A' onClick={setShow('exhibit-a')}
         className="fixedExhibitA" noposition={true} textColor='#3d8daf' iconColor='#3d8daf' />
-      <DesktopIcon icon={faBoxArchive} title='Exhibit B' onClick={() => setShowExhibitB(true)}
+      <DesktopIcon icon={faBoxArchive} title='Exhibit B' onClick={setShow('exhibit-b')}
         className="fixedExhibitB" noposition={true} textColor='#1d4454' iconColor='#1d4454' />
-      <DesktopIcon icon={faTrashCan} title='Exhibit C' onClick={() => setShowExhibitC(true)}
+      <DesktopIcon icon={faTrashCan} title='Exhibit C' onClick={setShow('exhibit-c')}
         className="fixedExhibitC" noposition={true} textColor='red' iconColor='darkred'/>
-      <AboutMeDialog show={showAboutMe} onDismiss={() => setShowAboutMe(false)} />
-      <ExhibitCDialog show={showExhibitC} onDismiss={() => setShowExhibitC(false)} />
-      <ExhibitBDialog show={showExhibitB} onDismiss={() => setShowExhibitB(false)} />
-      <ExhibitADialog show={showExhibitA} onDismiss={() => setShowExhibitA(false)} />
-      <CreditsDialog show={showCredits} onDismiss={() => setShowCredits(false)} />
+      <AboutMeDialog {...dialogProp('about-me')} />
+      <ExhibitCDialog {...dialogProp('exhibit-c')} />
+      <ExhibitBDialog {...dialogProp('exhibit-b')} />
+      <ExhibitADialog {...dialogProp('exhibit-a')} />
+      <CreditsDialog {...dialogProp('credits')} />
       <ErrorDialog />
       <UserAgreementDialog />
     </div>
