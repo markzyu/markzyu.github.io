@@ -21,7 +21,11 @@ const App = props => {
   const [visibleDialogs, setVisibleDialogs] = useState(new Set());
 
   useEffect(() => {
-    const onLoad = () => setIsLoaded(true);
+    const onLoad = () => {
+      const loadingGif = document.getElementById("loadingGif");
+      if(loadingGif) loadingGif.style['display'] = 'none';   // Workaround for not having gif during test.
+      setIsLoaded(true);
+    };
     const onAppUnmount = () => window.removeEventListener('load', onLoad);
     window.addEventListener('load', onLoad);
     return onAppUnmount;
