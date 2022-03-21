@@ -4,10 +4,13 @@ import ReactMarkdown from 'react-markdown';
 import DismissDialog from '../components/DismissDialog';
 
 const content = `
-Mark is yet another wanna-be artisan coder. 
+Mark is a full stack programmer coming from a DevOps background, 
+looking to focus more on software development, with 3 years of 
+professional experience developing containerized backend services, 
+and with casual, self-motivated frontend projects in Javascript, 
+React, Redux, Android, and Firebase.
 
-Most of his "artwork" is worthless and half finished. See Exhibit B and C for examples.
-`
+For more information, please refer to his [Resume](/Resume.pdf).`
 
 export const AboutMeDialog = props => {
   return (

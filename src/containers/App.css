@@ -72,12 +72,24 @@ html, body, #root {
   margin-left: 34%;
 }
 
-.medium-modal {
-  max-width: 33%;
+@media(min-aspect-ratio: 3/4) {
+  .medium-modal {
+    max-width: 20%;
+  }
+
+  .large-modal {
+    max-width: 40%;
+  }
 }
 
-.large-modal {
-  max-width: 75%;
+@media(max-aspect-ratio: 3/4) {
+  .medium-modal {
+    max-width: 80%;
+  }
+
+  .large-modal {
+    max-width: 90%;
+  }
 }
 
 button  {

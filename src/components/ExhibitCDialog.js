@@ -15,6 +15,8 @@ selecting different programming languages for different parts of the program. (T
 requires the creation of multiple entirely new runtimes, with different choices of memory 
 management schemes. I do not have the man power needed to do this. )
 
+- A note-taking app that enables multiple users to edit or view Markdown documents in the Firebase database.
+
 - A retro css library that makes webpages look like old Linux console UIs. There are already 
 well-established libraries for this purpose, such as [BOOTSTRA.386](https://github.com/kristopolous/BOOTSTRA.386).
 `

@@ -13,6 +13,8 @@ but make sure to mention me somewhere in the products.
 backups across multiple hard drives. Instead of using a UI, this program displays the results
 through an Excel sheet. 
 
+- BarcodeDB: A phone app that scans barcodes and builds a database of my belongings.
+
 - GrandOverworld: A network protocol that can connect multiple Minecraft Java servers in a way
 that divides one single Minecraft world into multiple chunks, and served by different servers.
 I stopped working on this project because solutions like WorldQL already exist.

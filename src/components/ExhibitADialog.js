@@ -7,6 +7,8 @@ const content = `
 I'm currently actively working on these projects:
 
 - This homepage.
+- Twitch streamer's helper app: it discreetly notifies a streamer about stream quality, chats, and new
+followers, in real time, and has proven useful in 110+ Twitch streams
 - Password hasher: a password manager that doesn't store the passwords directly.
 - Pcontainer: A rewrite of proot in Rust.
 `
