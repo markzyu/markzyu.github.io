@@ -12,8 +12,15 @@ const exampleApp = () => render(
   </Provider>
 );
 
-test('renders ok', () => {
-  const { getByText } = exampleApp();
-  const template = getByText("About me");
-  expect(template).toBeVisible();
+test('renders nothing when not loaded', () => {
+  const app = exampleApp();
+  expect(app.container).not.toHaveTextContent("About me");
+});
+
+test('renders ok when loaded', done => {
+  const app = exampleApp();
+  setTimeout(() => {
+    expect(app.container).toHaveTextContent("About me");
+    done();
+  }, 1000);
 });

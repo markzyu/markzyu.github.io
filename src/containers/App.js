@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {connect, useDispatch} from 'react-redux';
 
@@ -16,10 +16,22 @@ import { ExhibitCDialog } from '../components/ExhibitCDialog.js';
 
 const App = props => {
   const dispatch = useDispatch();
-  
-  // dialogOrders: last element in array shows up on top
+  const [isLoaded, setIsLoaded] = useState(false);
   const [dialogOrders, setDialogOrders] = useState([]);
   const [visibleDialogs, setVisibleDialogs] = useState(new Set());
+
+  useEffect(() => {
+    const onLoad = () => setIsLoaded(true);
+    const onAppUnmount = () => window.removeEventListener('load', onLoad);
+    window.addEventListener('load', onLoad);
+    return onAppUnmount;
+  });
+
+  if (!isLoaded) return (
+    <link rel='stylesheet' type='text/css' href={props.themeCssPath} />
+  );
+  
+  // dialogOrders: last element in array shows up on top
   const anyShowing = visibleDialogs.size > 0 || props.showAgreement || props.showError;
   const helpSetShow = (name, show) => {
     var newVisible = new Set(visibleDialogs);
