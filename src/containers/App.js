@@ -15,6 +15,7 @@ import { ExhibitBDialog } from '../components/ExhibitBDialog.js';
 import { ExhibitCDialog } from '../components/ExhibitCDialog.js';
 import { useParams } from 'react-router-dom';
 import { NotFoundDialog } from '../components/NotFoundDialog.js';
+import history from '../history.js';
 
 const validAppIds = new Set([
   'about-me',
@@ -57,6 +58,7 @@ const App = props => {
     if (show) {
       newVisible.add(name);
       newOrders.push(name);
+      history.replace(`/${name}`)
     } else {
       newVisible.delete(name);
     }

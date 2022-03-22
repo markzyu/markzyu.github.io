@@ -8,12 +8,13 @@ import App from './containers/App';
 import rootReducer from './reducers';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import history from './history';
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={createStore(rootReducer)}>
       <BrowserRouter>
-        <Routes>
+        <Routes history={history}>
           <Route path="/:appId" element={<App/>}></Route>
           <Route path="/" element={<App/>}></Route>
           <Route path="*" element={<App appId="not-found" />} />
