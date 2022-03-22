@@ -26,14 +26,25 @@ const validAppIds = new Set([
   'not-found',
 ]);
 
+const titles = {
+  'about-me': 'About Me',
+  'credits': 'Credits',
+  'exhibit-a': 'Exhibit A',
+  'exhibit-b': 'Exhibit B',
+  'exhibit-c': 'Exhibit C',
+  'not-found': 'Page Not Found',
+};
+
 const App = props => {
-  var appId = useParams().appId || props.appId;
-  if (appId && !validAppIds.has(appId)) appId = 'not-found';
+  var initAppId = useParams().appId || props.appId;
+  if (initAppId && !validAppIds.has(initAppId)) initAppId = 'not-found';
 
   const dispatch = useDispatch();
+  const [appId, setAppId] = useState(initAppId);
   const [isLoaded, setIsLoaded] = useState(false);
   const [dialogOrders, setDialogOrders] = useState(appId ? [appId] : []);
   const [visibleDialogs, setVisibleDialogs] = useState(new Set(appId ? [appId]: []));
+  if (appId) document.title = titles[appId];
 
   useEffect(() => {
     const onLoad = () => {
@@ -59,6 +70,7 @@ const App = props => {
       newVisible.add(name);
       newOrders.push(name);
       history.replace(`/${name}`);
+      setAppId(name);
     } else {
       newVisible.delete(name);
     }
@@ -78,6 +90,11 @@ const App = props => {
     } else {
       dispatch(setTheme('https://unpkg.com/xp.css@0.2.3/dist/98.css'));
     }
+  }
+
+  if (!anyShowing) {
+    document.title = "Mark Yu's homepage";
+    history.replace('/');
   }
 
   return (
