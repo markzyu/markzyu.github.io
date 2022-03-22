@@ -13,12 +13,26 @@ import { CreditsDialog } from '../components/CreditsDialog.js';
 import { ExhibitADialog } from '../components/ExhibitADialog.js';
 import { ExhibitBDialog } from '../components/ExhibitBDialog.js';
 import { ExhibitCDialog } from '../components/ExhibitCDialog.js';
+import { useParams } from 'react-router-dom';
+import { NotFoundDialog } from '../components/NotFoundDialog.js';
+
+const validAppIds = new Set([
+  'about-me',
+  'credits',
+  'exhibit-a',
+  'exhibit-b',
+  'exhibit-c',
+  'not-found',
+]);
 
 const App = props => {
+  var appId = useParams().appId || props.appId;
+  if (appId && !validAppIds.has(appId)) appId = 'not-found';
+
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [dialogOrders, setDialogOrders] = useState([]);
-  const [visibleDialogs, setVisibleDialogs] = useState(new Set());
+  const [dialogOrders, setDialogOrders] = useState(appId ? [appId] : []);
+  const [visibleDialogs, setVisibleDialogs] = useState(new Set(appId ? [appId]: []));
 
   useEffect(() => {
     const onLoad = () => {
@@ -34,7 +48,7 @@ const App = props => {
   if (!isLoaded) return (
     <link rel='stylesheet' type='text/css' href={props.themeCssPath} />
   );
-  
+
   // dialogOrders: last element in array shows up on top
   const anyShowing = visibleDialogs.size > 0 || props.showAgreement || props.showError;
   const helpSetShow = (name, show) => {
@@ -86,6 +100,7 @@ const App = props => {
       <ExhibitBDialog {...dialogProp('exhibit-b')} />
       <ExhibitADialog {...dialogProp('exhibit-a')} />
       <CreditsDialog {...dialogProp('credits')} />
+      <NotFoundDialog {...dialogProp('not-found')} />
       <ErrorDialog />
       <UserAgreementDialog />
     </div>
@@ -95,6 +110,7 @@ const App = props => {
 App.propTypes = {
   content: PropTypes.string.isRequired,
   themeCssPath: PropTypes.string.isRequired,
+  appId: PropTypes.string,
 }
 
 const mapStateToProps = (state, props) => ({

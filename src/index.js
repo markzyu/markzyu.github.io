@@ -7,11 +7,18 @@ import './index.css';
 import App from './containers/App';
 import rootReducer from './reducers';
 import * as serviceWorker from './serviceWorker';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={createStore(rootReducer)}>
-      <App />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/:appId" element={<App/>}></Route>
+          <Route path="/" element={<App/>}></Route>
+          <Route path="*" element={<App appId="not-found" />} />
+        </Routes>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
