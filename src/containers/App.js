@@ -35,6 +35,8 @@ const titles = {
   'not-found': 'Page Not Found',
 };
 
+const DEFAULT_TITLE = "Mark Yu's homepage";
+
 const App = props => {
   var initAppId = useParams().appId || props.appId;
   if (initAppId && !validAppIds.has(initAppId)) initAppId = 'not-found';
@@ -45,6 +47,7 @@ const App = props => {
   const [dialogOrders, setDialogOrders] = useState(appId ? [appId] : []);
   const [visibleDialogs, setVisibleDialogs] = useState(new Set(appId ? [appId]: []));
   if (appId) document.title = titles[appId];
+  else document.title = DEFAULT_TITLE;
 
   useEffect(() => {
     const onLoad = () => {
@@ -93,7 +96,7 @@ const App = props => {
   }
 
   if (!anyShowing) {
-    document.title = "Mark Yu's homepage";
+    document.title = DEFAULT_TITLE;
     history.replace('/');
   }
 
