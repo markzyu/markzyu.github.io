@@ -85,18 +85,18 @@ const App = props => {
       <link rel='stylesheet' type='text/css' href={props.themeCssPath} />
       <div style={{flexDirection: 'row'}}>
         <div style={{flexDirection: 'column'}}>
-          <DesktopIcon icon={faCopyright} title='Credits' onClick={setShow('credits')}/>
+          <DesktopIcon icon={faCopyright} title='Credits' linkName='/credits' onClick={setShow('credits')}/>
           {anyShowing && <DesktopIcon icon={faRecycle} title='Change Theme' onClick={changeTheme}/>}
         </div>
       </div>
       <br/>
-      <DesktopIcon icon={faCircleInfo} title='About me' onClick={setShow('about-me')}
+      <DesktopIcon icon={faCircleInfo} title='About me' linkName='/about-me' onClick={setShow('about-me')}
         className="fixedAboutMe" noposition={true} textColor='#71b1cd' iconColor='#71b1cd' />
-      <DesktopIcon icon={faCalendarCheck} title='Exhibit A' onClick={setShow('exhibit-a')}
+      <DesktopIcon icon={faCalendarCheck} title='Exhibit A' linkName='/exhibit-a' onClick={setShow('exhibit-a')}
         className="fixedExhibitA" noposition={true} textColor='#3d8daf' iconColor='#3d8daf' />
-      <DesktopIcon icon={faBoxArchive} title='Exhibit B' onClick={setShow('exhibit-b')}
+      <DesktopIcon icon={faBoxArchive} title='Exhibit B' linkName='/exhibit-b' onClick={setShow('exhibit-b')}
         className="fixedExhibitB" noposition={true} textColor='#1d4454' iconColor='#1d4454' />
-      <DesktopIcon icon={faTrashCan} title='Exhibit C' onClick={setShow('exhibit-c')}
+      <DesktopIcon icon={faTrashCan} title='Exhibit C' linkName='/exhibit-c' onClick={setShow('exhibit-c')}
         className="fixedExhibitC" noposition={true} textColor='red' iconColor='darkred'/>
       <AboutMeDialog {...dialogProp('about-me')} />
       <ExhibitCDialog {...dialogProp('exhibit-c')} />
