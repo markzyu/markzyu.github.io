@@ -14,7 +14,7 @@ export const DesktopIcon = props => {
     const finalTextColor = textColor || '#71b1cd';
     const finalIconColor = iconColor || '#71b1cd';
     return (
-        <Link to={linkName || '/not-found'} onClick={onClick}>
+        <Link draggable={false} to={linkName || '/not-found'} onClick={onClick}>
             <div style={finalStyle} {...extraProps}>
                 <div style={{maxWidth: 50, textAlign: 'center', color: finalTextColor, pointerEvents: 'all'}}>
                     <FontAwesomeIcon 
