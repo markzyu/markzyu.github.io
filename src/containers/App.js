@@ -46,8 +46,15 @@ const App = props => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [dialogOrders, setDialogOrders] = useState(appId ? [appId] : []);
   const [visibleDialogs, setVisibleDialogs] = useState(new Set(appId ? [appId]: []));
-  if (appId) document.title = titles[appId];
-  else document.title = DEFAULT_TITLE;
+
+  if (appId) {
+    document.title = titles[appId];
+    history.replace(`/${appId}`);
+  }
+  else {
+    document.title = DEFAULT_TITLE;
+    history.replace('/');
+  }
 
   useEffect(() => {
     const onLoad = () => {
@@ -76,6 +83,9 @@ const App = props => {
       setAppId(name);
     } else {
       newVisible.delete(name);
+      const newName = newOrders[newOrders.length - 1];
+      history.replace(`/${newName}`);
+      setAppId(newName);
     }
     setVisibleDialogs(newVisible);
     setDialogOrders(newOrders);
@@ -112,11 +122,11 @@ const App = props => {
       <br/>
       <DesktopIcon icon={faCircleInfo} title='About me' linkName='/about-me' onClick={setShow('about-me')}
         className="fixedAboutMe" noposition={true} textColor='#71b1cd' iconColor='#71b1cd' />
-      <DesktopIcon icon={faCalendarCheck} title='Exhibit A' linkName='/exhibit-a' onClick={setShow('exhibit-a')}
+      <DesktopIcon icon={faCalendarCheck} title='Exhibit: A' linkName='/exhibit-a' onClick={setShow('exhibit-a')}
         className="fixedExhibitA" noposition={true} textColor='#3d8daf' iconColor='#3d8daf' />
-      <DesktopIcon icon={faBoxArchive} title='Exhibit B' linkName='/exhibit-b' onClick={setShow('exhibit-b')}
+      <DesktopIcon icon={faBoxArchive} title='Exhibit: B' linkName='/exhibit-b' onClick={setShow('exhibit-b')}
         className="fixedExhibitB" noposition={true} textColor='#1d4454' iconColor='#1d4454' />
-      <DesktopIcon icon={faTrashCan} title='Exhibit C' linkName='/exhibit-c' onClick={setShow('exhibit-c')}
+      <DesktopIcon icon={faTrashCan} title='Exhibit: C' linkName='/exhibit-c' onClick={setShow('exhibit-c')}
         className="fixedExhibitC" noposition={true} textColor='red' iconColor='darkred'/>
       <AboutMeDialog {...dialogProp('about-me')} />
       <ExhibitCDialog {...dialogProp('exhibit-c')} />
