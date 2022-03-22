@@ -58,7 +58,7 @@ const App = props => {
     if (show) {
       newVisible.add(name);
       newOrders.push(name);
-      history.replace(`/${name}`)
+      history.replace(`/${name}`);
     } else {
       newVisible.delete(name);
     }
@@ -79,6 +79,7 @@ const App = props => {
       dispatch(setTheme('https://unpkg.com/xp.css@0.2.3/dist/98.css'));
     }
   }
+
   return (
     <div style={{height: '100%', width: '100%'}}>
       <link rel='stylesheet' type='text/css' href={props.themeCssPath} />
