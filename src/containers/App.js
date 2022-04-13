@@ -59,7 +59,9 @@ const App = props => {
   useEffect(() => {
     const onLoad = () => {
       const loadingGif = document.getElementById("loadingGif");
-      if(loadingGif) loadingGif.style['display'] = 'none';   // Workaround for not having gif during test.
+      if(loadingGif) setTimeout(() => {
+        loadingGif.style['display'] = 'none';   // Workaround for not having gif during test.
+      }, 1000);
       setIsLoaded(true);
     };
     const onAppUnmount = () => window.removeEventListener('load', onLoad);
