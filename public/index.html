@@ -15,6 +15,7 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="stylesheet" href="%PUBLIC_URL%/loading.css" />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -27,7 +28,15 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <img id="loadingGif" src="/Ajux_loader.gif" style="position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%);" />
+    <div id="loadingGif" class="loading-container">
+      <div class="loading">
+        <div class="loading-part1"></div>
+        <div class="loading-part2"></div>
+        <div class="loading-part3"></div>
+        <div class="loading-part4"></div>
+      </div>
+      <span>Loading</span>
+    </div>
     <div id="root"></div>
     <!--
       This HTML file is a template.
