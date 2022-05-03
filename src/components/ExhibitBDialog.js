@@ -4,20 +4,17 @@ import ReactMarkdown from 'react-markdown';
 import DismissDialog from '../components/DismissDialog';
 
 const content = `
-These projects are currently put on hold but you can help 
-restart them by starring them or simply leaving a comment. 
-Please feel free to use these ideas for your own purposes,
-but make sure to mention me somewhere in the products.
+These projects are currently put on hold but I might still
+come back to them later.
+
+- [MentalGraph](https://drive.google.com/file/d/1r0YbH673z542_SLlGRUMaHkUNgwGeN9t/view?usp=sharing): 
+This app is invite-only. It enables multiple users to edit or view Markdown documents together. 
+For those with an invite, [here is a link to the website](https://markzyu.netlify.app/MentalGraph/).
 
 - BackupTrackerSheet: A Python program that can be used to track important files and their
-backups across multiple hard drives. Instead of using a UI, this program displays the results
-through an Excel sheet. 
+backups across multiple hard drives.
 
 - BarcodeDB: A phone app that scans barcodes and builds a database of my belongings.
-
-- GrandOverworld: A network protocol that can connect multiple Minecraft Java servers in a way
-that divides one single Minecraft world into multiple chunks, and served by different servers.
-I stopped working on this project because solutions like WorldQL already exist.
 `
 
 export const ExhibitBDialog = props => {

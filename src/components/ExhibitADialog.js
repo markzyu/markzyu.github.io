@@ -4,13 +4,13 @@ import ReactMarkdown from 'react-markdown';
 import DismissDialog from './DismissDialog';
 
 const content = `
-I'm currently actively working on these projects:
+I'm currently working on these projects:
 
 - This homepage.
+- [Password hasher](https://markzyu.github.io/password-hasher/): a password manager that doesn't store the passwords directly.
+- [Pcontainer](https://github.com/markzyu/pcontainer): A rewrite of proot in Rust.
 - Twitch streamer's helper app: it discreetly notifies a streamer about stream quality, chats, and new
 followers, in real time, and has proven useful in 110+ Twitch streams
-- Password hasher: a password manager that doesn't store the passwords directly.
-- Pcontainer: A rewrite of proot in Rust.
 `
 
 export const ExhibitADialog = props => {
