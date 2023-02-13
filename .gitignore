@@ -2,6 +2,7 @@
 
 .*.sw[opqr]
 .sw[opqr]
+secret*
 
 # dependencies
 /node_modules

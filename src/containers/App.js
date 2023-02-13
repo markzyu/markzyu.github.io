@@ -16,6 +16,7 @@ import { ExhibitCDialog } from '../components/ExhibitCDialog.js';
 import { useParams } from 'react-router-dom';
 import { NotFoundDialog } from '../components/NotFoundDialog.js';
 import history from '../history.js';
+import { TTSApp } from '../components/TTSApp.js';
 
 const validAppIds = new Set([
   'about-me',
@@ -24,6 +25,7 @@ const validAppIds = new Set([
   'exhibit-b',
   'exhibit-c',
   'not-found',
+  'tts-app',
 ]);
 
 const titles = {
@@ -33,6 +35,7 @@ const titles = {
   'exhibit-b': 'Exhibit B',
   'exhibit-c': 'Exhibit C',
   'not-found': 'Page Not Found',
+  'tts-app': 'TTSApp',
 };
 
 const DEFAULT_TITLE = "Mark Yu's homepage";
@@ -131,6 +134,7 @@ const App = props => {
       <DesktopIcon icon={faTrashCan} title='Exhibit: C' linkName='/exhibit-c' onClick={setShow('exhibit-c')}
         className="fixedExhibitC" noposition={true} textColor='red' iconColor='darkred'/>
       <AboutMeDialog {...dialogProp('about-me')} />
+      <TTSApp {...dialogProp('tts-app')} />
       <ExhibitCDialog {...dialogProp('exhibit-c')} />
       <ExhibitBDialog {...dialogProp('exhibit-b')} />
       <ExhibitADialog {...dialogProp('exhibit-a')} />
