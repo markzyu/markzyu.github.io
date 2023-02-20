@@ -90,6 +90,44 @@ const makeSSML = ({ text = '', emotion = 'general', voiceName = 'en-US-JennyNeur
   return ssml;
 }
 
+// Calls AI if needed. Returns a Blob / File
+const cacheSpeak = async (dirHandle, func, ai, content) => {
+  const key = {funcName: func.name, content};
+  const cacheHandle = await dirHandle.getDirectoryHandle("audioCache", {create: true});
+  const hashRaw = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(key)));
+  const hashHex = Array.from(new Uint8Array(hashRaw)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+  if (!hashHex) throw new Error("Unexpected hashing failure: " + hashRaw + " from content: " + JSON.stringify(key));
+
+  const jsonFileHandle = await cacheHandle.getFileHandle(`${hashHex}.json`, {create: true});
+  const audioFileHandle = await cacheHandle.getFileHandle(`${hashHex}.dat`, {create: true});
+  const jsonFile = await jsonFileHandle.getFile();
+  const audioFile = await audioFileHandle.getFile();
+
+  let cacheOk = false;
+  try {
+    const jsonFileText = await jsonFile.text();
+    if (jsonFileText === JSON.stringify(key)) cacheOk = true;
+  } catch (err) {cacheOk = false;}
+
+  if (cacheOk) {
+    console.log("Using cache at", audioFile.name);
+    return audioFile;
+  }
+
+  // Update cache
+  console.log("Updating cache at", audioFile.name);
+  const result = await func(ai, content);
+  const blob = new Blob([new Uint8Array(result.audioData, 0, result.audioData.byteLength)]);
+  const writeJson = await jsonFileHandle.createWritable({keepExistingData: false});
+  const writeAudio = await audioFileHandle.createWritable({keepExistingData: false});
+  await writeJson.write(JSON.stringify(key));
+  await writeJson.close();
+  await writeAudio.write(blob);
+  await writeAudio.close();
+  return blob;
+}
+
 
 export const TTSApp = props => {
   const [dirHandle, setDirHandle] = useState(null);
@@ -123,9 +161,7 @@ export const TTSApp = props => {
     const audioConfig = AudioConfig.fromStreamOutput(stream);
     const ai = new SpeechSynthesizer(speechConfig, audioConfig);
     const ssml = makeSSML({text: currentLine, ...currntVoiceConfig, config: voicesJson});
-    const result = await speakSsmlAsync(ai, ssml);
-
-    const blob = new Blob([new Uint8Array(result.audioData, 0, result.audioData.byteLength)]);
+    const blob = await cacheSpeak(dirHandle, speakSsmlAsync, ai, ssml);
     const url = URL.createObjectURL(blob);
     setAudioUrl(url);
     setTimeout(() => {
