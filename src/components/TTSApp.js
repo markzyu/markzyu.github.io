@@ -60,6 +60,10 @@ const makeSSMLPart = ({ text = '', emotion = 'general', pitch = '0%', rate = '0%
   return `<prosody rate="${rate}" pitch="${pitch}">${text}</prosody>`
 }
 
+const addPercentStrings = (a, b) => {
+  return `${parseInt(a) + parseInt(b)}%`;
+}
+
 // WARNING: Azure only supports changing emotion once per sentence anyways, so we only allow one per segment
 const makeSSML = ({ text = '', emotion = 'general', voiceName = 'en-US-JennyNeural', pitch = '0%', rate = '0%', config }) => {
   const origTextParts = textToParts(text, config?.textSymbols);
@@ -68,8 +72,8 @@ const makeSSML = ({ text = '', emotion = 'general', voiceName = 'en-US-JennyNeur
       const maybePitch = config?.pitchSymbols?.[part.command];
       const maybeRate = config?.rateSymbols?.[part.command];
       const maybeEmotion = config?.emotionSymbols?.[part.command];
-      if (maybePitch) pitch = maybePitch;
-      if (maybeRate) rate = maybeRate;
+      if (maybePitch) pitch = addPercentStrings(pitch, maybePitch);
+      if (maybeRate) rate = addPercentStrings(rate, maybeRate);
       if (maybeEmotion) emotion = maybeEmotion;
       return [];
     } else if (part.text) {
@@ -205,7 +209,7 @@ export const TTSApp = props => {
   }
 
   const onOpenProject = async () => {
-    const newDirHandle = await window.showDirectoryPicker();
+    const newDirHandle = await window.showDirectoryPicker({mode: "readwrite"});
     onOpenSubtitleFile(await newDirHandle.getFileHandle('subtitle.ass'));
     onOpenVideoFile(await newDirHandle.getFileHandle('video.mp4'));
     onOpenVoicesJson(await newDirHandle.getFileHandle('voices.json'));
