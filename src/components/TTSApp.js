@@ -3,6 +3,11 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DismissDialog from '../components/DismissDialog';
 import parseAss from 'ass-parser';
 
+let secretsJson = null;
+try {
+  secretsJson = require('../secrets.json');
+} catch (error) {}
+
 const speakTextAsync = (ai, text) => new Promise((done, err) => {
   ai.speakTextAsync(text, done, err);
 });
@@ -148,6 +153,11 @@ export const TTSApp = props => {
   const endTime = currentSubtitle?.End && parseDuration(currentSubtitle?.End);
 
   if (refVideo.current) refVideo.current.volume = 0.4;
+
+  useEffect(() => {
+    const key = secretsJson?.azure_tts_key?.key;
+    if (key) refKeyInput.current.value = key;
+  }, [refKeyInput]);
 
   const updateSpeechConfig = () => {
     const key = refKeyInput.current?.value;
