@@ -1,16 +1,7 @@
-import { AudioConfig, AudioOutputStream, SpeechConfig, SpeechSynthesizer, TranslationSynthesisResult } from 'microsoft-cognitiveservices-speech-sdk';
-import React, { useEffect, useRef, useState } from 'react';
+import { AudioConfig, AudioOutputStream, SpeechConfig, SpeechSynthesizer } from 'microsoft-cognitiveservices-speech-sdk';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import DismissDialog from '../components/DismissDialog';
 import parseAss from 'ass-parser';
-
-const content = `
-Mark is a full stack programmer coming from a DevOps background, 
-looking to focus more on software development, with 3 years of 
-professional experience developing containerized backend services, 
-and with casual, self-motivated frontend projects in Javascript, 
-React, Redux, Android, and Firebase.
-
-For more information, please refer to his [Resume](/Resume.pdf).`
 
 const speakTextAsync = (ai, text) => new Promise((done, err) => {
   ai.speakTextAsync(text, done, err);
@@ -98,7 +89,7 @@ const makeSSML = ({ text = '', emotion = 'general', voiceName = 'en-US-JennyNeur
 }
 
 // Calls AI if needed. Returns a Blob / File
-const cacheSpeak = async (dirHandle, func, ai, content) => {
+const cacheSpeak = async (dirHandle, func = speakTextAsync, ai, content) => {
   const key = {funcName: func.name, content};
   const cacheHandle = await dirHandle.getDirectoryHandle("audioCache", {create: true});
   const hashRaw = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(key)));
@@ -164,7 +155,7 @@ export const TTSApp = props => {
     setSpeechConfig(config);
   };
 
-  const fetchVoiceURL = async (idx) => {
+  const fetchVoiceURL = useCallback(async (idx) => {
     const Subtitle = subtitleData && subtitleData.length && subtitleData[idx];
     const Line = String(Subtitle?.Text).replace(/\\[nN]/g, " ");
     const Voice = String(Subtitle?.Name);
@@ -172,10 +163,10 @@ export const TTSApp = props => {
     const stream = AudioOutputStream.createPullStream();
     const audioConfig = AudioConfig.fromStreamOutput(stream);
     const ai = new SpeechSynthesizer(speechConfig, audioConfig);
-    const [ssml, volume] = makeSSML({text: currentLine, ...currntVoiceConfig, config: voicesJson});
+    const [ssml, volume] = makeSSML({text: Line, ...VoiceConfig, config: voicesJson});
     const blob = await cacheSpeak(dirHandle, speakSsmlAsync, ai, ssml);
     return [URL.createObjectURL(blob), volume];
-  }
+  }, [subtitleData, voicesJson, speechConfig, dirHandle]);
 
   const onClick = async (avoidPlayingVideo) => {
     const [url, volume] = await fetchVoiceURL(subtitleIdx);
@@ -263,7 +254,7 @@ export const TTSApp = props => {
       }
     }, 200);
     return () => clearInterval(timer);
-  }, [subtitleData]);
+  }, [subtitleData, fetchVoiceURL]);
 
   const onPrev = () => {
     refAudio.current?.pause();
