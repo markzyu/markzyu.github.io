@@ -1,5 +1,5 @@
-import { AudioConfig, AudioOutputStream, SpeechConfig, SpeechSynthesizer } from 'microsoft-cognitiveservices-speech-sdk';
-import React, { useRef, useState } from 'react';
+import { AudioConfig, AudioOutputStream, SpeechConfig, SpeechSynthesizer, TranslationSynthesisResult } from 'microsoft-cognitiveservices-speech-sdk';
+import React, { useEffect, useRef, useState } from 'react';
 import DismissDialog from '../components/DismissDialog';
 import parseAss from 'ass-parser';
 
@@ -66,14 +66,17 @@ const addPercentStrings = (a, b) => {
 
 // WARNING: Azure only supports changing emotion once per sentence anyways, so we only allow one per segment
 const makeSSML = ({ text = '', emotion = 'general', voiceName = 'en-US-JennyNeural', pitch = '0%', rate = '0%', config }) => {
+  let volume = "100%";
   const origTextParts = textToParts(text, config?.textSymbols);
   const textParts = origTextParts.flatMap(part => {
     if (part.command) {
       const maybePitch = config?.pitchSymbols?.[part.command];
       const maybeRate = config?.rateSymbols?.[part.command];
       const maybeEmotion = config?.emotionSymbols?.[part.command];
+      const maybeVol = config?.volumeSymbols?.[part.command];
       if (maybePitch) pitch = addPercentStrings(pitch, maybePitch);
       if (maybeRate) rate = addPercentStrings(rate, maybeRate);
+      if (maybeVol) volume = addPercentStrings(volume, maybeVol);
       if (maybeEmotion) emotion = maybeEmotion;
       return [];
     } else if (part.text) {
@@ -91,7 +94,7 @@ const makeSSML = ({ text = '', emotion = 'general', voiceName = 'en-US-JennyNeur
     </voice></speak>
   `
   console.log("TEST", ssml);
-  return ssml;
+  return [ssml, volume];
 }
 
 // Calls AI if needed. Returns a Blob / File
@@ -144,6 +147,7 @@ export const TTSApp = props => {
   const refKeyInput = useRef();
   const refAudio = useRef();
   const refVideo = useRef();
+  const [triggerPlay, setTriggerPlay] = useState(false);
 
   const currentSubtitle = subtitleData && subtitleData.length && subtitleData[subtitleIdx];
   const currentLine = String(currentSubtitle?.Text).replace(/\\[nN]/g, " ");
@@ -152,29 +156,43 @@ export const TTSApp = props => {
   const startTime = currentSubtitle?.Start && parseDuration(currentSubtitle?.Start);
   const endTime = currentSubtitle?.End && parseDuration(currentSubtitle?.End);
 
-  if (refVideo.current) refVideo.current.volume = 0.6;
+  if (refVideo.current) refVideo.current.volume = 0.4;
 
-  const updateSpeechConfig = (event) => {
+  const updateSpeechConfig = () => {
     const key = refKeyInput.current?.value;
     const config = SpeechConfig.fromSubscription(key, "centralus");
     setSpeechConfig(config);
   };
 
-  const onClick = async () => {
+  const fetchVoiceURL = async (idx) => {
+    const Subtitle = subtitleData && subtitleData.length && subtitleData[idx];
+    const Line = String(Subtitle?.Text).replace(/\\[nN]/g, " ");
+    const Voice = String(Subtitle?.Name);
+    const VoiceConfig = voicesJson?.voices && voicesJson?.voices[Voice];
     const stream = AudioOutputStream.createPullStream();
     const audioConfig = AudioConfig.fromStreamOutput(stream);
     const ai = new SpeechSynthesizer(speechConfig, audioConfig);
-    const ssml = makeSSML({text: currentLine, ...currntVoiceConfig, config: voicesJson});
+    const [ssml, volume] = makeSSML({text: currentLine, ...currntVoiceConfig, config: voicesJson});
     const blob = await cacheSpeak(dirHandle, speakSsmlAsync, ai, ssml);
-    const url = URL.createObjectURL(blob);
+    return [URL.createObjectURL(blob), volume];
+  }
+
+  const onClick = async (avoidPlayingVideo) => {
+    const [url, volume] = await fetchVoiceURL(subtitleIdx);
     setAudioUrl(url);
     setTimeout(() => {
       const audioPlaybackRate = refAudio.current.duration / (endTime - startTime);
-      refVideo.current.currentTime = startTime;
+      if (!avoidPlayingVideo) refVideo.current.currentTime = startTime;
+      refAudio.current.volume = parseInt(volume) / 100;
       refAudio.current.playbackRate = audioPlaybackRate;
-      refVideo.current.play();
+      avoidPlayingVideo || refVideo.current.play();
       refAudio.current.play();
     }, 100);
+  }
+
+  if (triggerPlay) {
+    onClick(true);
+    setTriggerPlay(false);
   }
 
   const onOpenSubtitleFile = async (fileHandle) => {
@@ -222,22 +240,62 @@ export const TTSApp = props => {
     onOpenVoicesJson(await dirHandle.getFileHandle('voices.json'));
   }
 
-  const onPrev = () => setSubtitleIdx((subtitleIdx + subtitleData.length - 1) % subtitleData.length);
-  const onNext = () => setSubtitleIdx((subtitleIdx + 1) % subtitleData.length);
+  const isContinuousPlay = useRef(false);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (!isContinuousPlay.current) return;
+      if (!subtitleData || !subtitleData.length) return;
+      if (!refVideo.current) return;
+      const relatedIdxs = subtitleData.flatMap((data, idx) => {
+        if (Math.abs(parseDuration(data.Start) - refVideo.current.currentTime) >= 0.2)
+          return [];
+        return [idx];
+      });
+      const fetchingIdxs = subtitleData.flatMap((data, idx) => {
+        if (Math.abs(parseDuration(data.Start) - refVideo.current.currentTime) >= 2)
+          return [];
+        return [idx];
+      });
+      fetchingIdxs.forEach(fetchVoiceURL);
+      if (relatedIdxs && relatedIdxs.length) {
+        setSubtitleIdx(relatedIdxs[0]);
+        setTriggerPlay(true);
+      }
+    }, 200);
+    return () => clearInterval(timer);
+  }, [subtitleData]);
+
+  const onPrev = () => {
+    refAudio.current?.pause();
+    refVideo.current?.pause();
+    isContinuousPlay.current = false;
+    setSubtitleIdx((subtitleIdx + subtitleData.length - 1) % subtitleData.length)
+  };
+  const onNext = () => {
+    refAudio.current?.pause();
+    refVideo.current?.pause();
+    isContinuousPlay.current = false;
+    setSubtitleIdx((subtitleIdx + 1) % subtitleData.length);
+  }
+  const onPlay = () => {
+    refVideo.current?.play();
+    isContinuousPlay.current = true;
+    updateSpeechConfig();
+  }
 
   return (
     <DismissDialog title="TTS/Sub-to-Dub machine" {...props} className="medium-modal">
       <button onClick={onOpenProject}>Open project folder</button> <button onClick={onRefresh}>Refresh</button><br/>
-      {videoUrl && <video src={videoUrl} width="100%" ref={refVideo}></video>} <br/>
+      {videoUrl && <video controls={isContinuousPlay.current || undefined} src={videoUrl} width="100%" ref={refVideo}></video>} <br/>
       Current line: {currentLine} <br/>
       Current voice: {currntVoice} <br/>
       Voice config: {JSON.stringify(currntVoiceConfig)} <br/>
-      <button onClick={onPrev}>Prev</button><button onClick={onNext}>Next</button><br/>
+      <button onClick={onPrev}>Prev</button> <button onClick={onPlay}>Play</button> <button onClick={onNext}>Next</button><br/>
       From the developer: I tried my best to make sure your API key will only be temporarily stored on your machine and transmitted only to Microsoft Azure Cloud. But I'm not working full time on this project so bad actors might still be able to retrieve your key through attacks like XSS. <br/> <br/>
       Consent Form: By putting the API key here, (1) I declare that I know the risks, and understand that, to the maximum extend permittable by law, there is NO warranty of security, privacy, merchantability, usability, reliability, or anything like that, and (2) I declare that I won't sue the website owner, or the Github source code owners, for using / temporarily storing the key on this webpage. <br/> <br/>
       I understand and here is my API Key: <input type="password" onChange={updateSpeechConfig} ref={refKeyInput} /><br/>
       {subtitleData && <button onClick={onClick}>Go</button>}
-      {audioUrl && <audio ref={refAudio} src={audioUrl} onPause={() => refVideo.current?.pause()}></audio>}
+      {audioUrl && <audio ref={refAudio} src={audioUrl} onPause={() => isContinuousPlay.current || refVideo.current?.pause()}></audio>}
     </DismissDialog>
   )
 };
