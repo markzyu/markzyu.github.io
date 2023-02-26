@@ -288,14 +288,15 @@ export const TTSApp = props => {
     <DismissDialog title="TTS/Sub-to-Dub machine" {...props} className="medium-modal">
       <button onClick={onOpenProject}>Open project folder</button> <button onClick={onRefresh}>Refresh</button><br/>
       {videoUrl && <video controls={isContinuousPlay.current || undefined} src={videoUrl} width="100%" ref={refVideo}></video>} <br/>
+      <button onClick={onPrev}>Prev</button> <button onClick={() => onClick(false)}>Play One Line</button> <button onClick={onPlay}>Play</button> <button onClick={onNext}>Next</button><br/>
+      <hr />
       Current line: {currentLine} <br/>
       Current voice: {currntVoice} <br/>
       Voice config: {JSON.stringify(currntVoiceConfig)} <br/>
-      <button onClick={onPrev}>Prev</button> <button onClick={onPlay}>Play</button> <button onClick={onNext}>Next</button><br/>
+      <hr />
       From the developer: I tried my best to make sure your API key will only be temporarily stored on your machine and transmitted only to Microsoft Azure Cloud. But I'm not working full time on this project so bad actors might still be able to retrieve your key through attacks like XSS. <br/> <br/>
       Consent Form: By putting the API key here, (1) I declare that I know the risks, and understand that, to the maximum extend permittable by law, there is NO warranty of security, privacy, merchantability, usability, reliability, or anything like that, and (2) I declare that I won't sue the website owner, or the Github source code owners, for using / temporarily storing the key on this webpage. <br/> <br/>
       I understand and here is my API Key: <input type="password" onChange={updateSpeechConfig} ref={refKeyInput} /><br/>
-      {subtitleData && <button onClick={onClick}>Go</button>}
       {audioUrl && <audio ref={refAudio} src={audioUrl} onPause={() => isContinuousPlay.current || refVideo.current?.pause()}></audio>}
     </DismissDialog>
   )
