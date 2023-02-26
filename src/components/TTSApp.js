@@ -248,12 +248,12 @@ export const TTSApp = props => {
       if (!subtitleData || !subtitleData.length) return;
       if (!refVideo.current) return;
       const relatedIdxs = subtitleData.flatMap((data, idx) => {
-        if (Math.abs(parseDuration(data.Start) - refVideo.current.currentTime) >= 0.2)
+        if (Math.abs(parseDuration(data.Start) - refVideo.current.currentTime) >= 0.1)
           return [];
         return [idx];
       });
       const fetchingIdxs = subtitleData.flatMap((data, idx) => {
-        if (Math.abs(parseDuration(data.Start) - refVideo.current.currentTime) >= 2)
+        if (Math.abs(parseDuration(data.Start) - refVideo.current.currentTime) >= 3)
           return [];
         return [idx];
       });
@@ -262,7 +262,7 @@ export const TTSApp = props => {
         setSubtitleIdx(relatedIdxs[0]);
         setTriggerPlay(true);
       }
-    }, 200);
+    }, 100);
     return () => clearInterval(timer);
   }, [subtitleData, fetchVoiceURL]);
 
