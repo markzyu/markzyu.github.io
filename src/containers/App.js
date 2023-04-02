@@ -17,6 +17,7 @@ import { useParams } from 'react-router-dom';
 import { NotFoundDialog } from '../components/NotFoundDialog.js';
 import history from '../history.js';
 import { TTSApp } from '../components/TTSApp.js';
+import { OLEDSaver } from '../components/OLEDSaver.js';
 
 const validAppIds = new Set([
   'about-me',
@@ -26,6 +27,7 @@ const validAppIds = new Set([
   'exhibit-c',
   'not-found',
   'tts-app',
+  'oled-saver',
 ]);
 
 const titles = {
@@ -36,6 +38,7 @@ const titles = {
   'exhibit-c': 'Exhibit C',
   'not-found': 'Page Not Found',
   'tts-app': 'TTSApp',
+  'oled-saver': 'OLED Saver',
 };
 
 const DEFAULT_TITLE = "Mark Yu's homepage";
@@ -135,6 +138,7 @@ const App = props => {
         className="fixedExhibitC" noposition={true} textColor='red' iconColor='darkred'/>
       <AboutMeDialog {...dialogProp('about-me')} />
       <TTSApp {...dialogProp('tts-app')} />
+      <OLEDSaver {...dialogProp('oled-saver')} />
       <ExhibitCDialog {...dialogProp('exhibit-c')} />
       <ExhibitBDialog {...dialogProp('exhibit-b')} />
       <ExhibitADialog {...dialogProp('exhibit-a')} />
