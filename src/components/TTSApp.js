@@ -8,13 +8,14 @@ try {
   secretsJson = require('../secrets.json');
 } catch (error) {}
 
-const speakTextAsync = (ai, text) => new Promise((done, err) => {
-  ai.speakTextAsync(text, done, err);
-});
-
-const speakSsmlAsync = (ai, ssml) => new Promise((done, err) => {
-  ai.speakSsmlAsync(ssml, done, err);
-});
+const speakFuncs = {
+  speakTextAsync: (ai, text) => new Promise((done, err) => {
+    ai.speakTextAsync(text, done, err);
+  }),
+  speakSsmlAsync: (ai, ssml) => new Promise((done, err) => {
+    ai.speakSsmlAsync(ssml, done, err);
+  }),
+};
 
 const parseDuration = (txt) => txt.split(":").map(parseFloat).reduce((prev, curr) => prev * 60 + curr);
 
@@ -94,8 +95,11 @@ const makeSSML = ({ text = '', emotion = 'general', voiceName = 'en-US-JennyNeur
 }
 
 // Calls AI if needed. Returns a Blob / File
-const cacheSpeak = async (dirHandle, func = speakTextAsync, ai, content) => {
-  const key = {funcName: func.name, content};
+const cacheSpeak = async (dirHandle, funcName = "speakTextAsync", ai, content) => {
+  const func = speakFuncs[funcName];
+  if (!func) return;
+
+  const key = {funcName, content};
   const cacheHandle = await dirHandle.getDirectoryHandle("audioCache", {create: true});
   const hashRaw = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(key)));
   const hashHex = Array.from(new Uint8Array(hashRaw)).map(b => b.toString(16).padStart(2, '0')).join('');
@@ -174,7 +178,7 @@ export const TTSApp = props => {
     const audioConfig = AudioConfig.fromStreamOutput(stream);
     const ai = new SpeechSynthesizer(speechConfig, audioConfig);
     const [ssml, volume] = makeSSML({text: Line, ...VoiceConfig, config: voicesJson});
-    const blob = await cacheSpeak(dirHandle, speakSsmlAsync, ai, ssml);
+    const blob = await cacheSpeak(dirHandle, "speakSsmlAsync", ai, ssml);
     return [URL.createObjectURL(blob), volume];
   }, [subtitleData, voicesJson, speechConfig, dirHandle]);
 
