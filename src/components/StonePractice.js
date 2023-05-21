@@ -5,7 +5,7 @@ import DismissDialog from './DismissDialog';
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { getStoneStats, setStoneStats } from '../store';
 
-export const StoneRow = ({numDots, refTotal, name, minWidth, prob, setProb}) => {
+export const StoneRow = ({numDots, refTotal, name, minWidth, prob, setProb, onStart, onFinish}) => {
   const [vals, setVals] = useState(new Array(numDots).fill(null));
   const [currIdx, setCurrIdx] = useState(0);
   const markers = vals.map((v, i) => {
@@ -16,20 +16,28 @@ export const StoneRow = ({numDots, refTotal, name, minWidth, prob, setProb}) => 
   })
   const onClick = () => {
     if (currIdx >= numDots) return;
+    onStart();
+
     const roll = Math.random();
     const target = prob / 100;
     console.log(`Rolled ${roll}, target: 0 to ${target}`)
+    let total = 0;
     if (roll > target) {
       vals[currIdx] = false;
+      total = vals.filter(v => v).length;
       setVals(vals);
       setCurrIdx(currIdx + 1);
       setProb(regulateMinMaxProb(prob + FAIL_PROB));
     } else {
       vals[currIdx] = true;
+      total = vals.filter(v => v).length;
       setVals(vals);
       setCurrIdx(currIdx + 1);
       setProb(regulateMinMaxProb(prob + SUCCESS_PROB));
     }
+
+    refTotal.current = {value: total};
+    if (currIdx + 1 >= numDots) onFinish();
   };
 
   const total = vals.filter(v => v).length;
@@ -62,34 +70,31 @@ const listStones = [
 ]
 
 const Stats = () => {
-  const stats = getStoneStats() || {};
-  const listStones = [
-    '6 6', '7 5', '7 6', '7 7', '9 6', '9 7', 'Total'
-  ]
-  const list = listStones.map(name => `| ${name} | ${stats[name] || 0} |`).join('\n');
+  const history = getStoneStats() instanceof Array ? getStoneStats() : [];
+  const stats = {};
+  const listStones = new Set();
+  for (const [v1, v2, red] of history) {
+    if (v1 < 6 || v2 < 6) continue;
+    const [s1, s2] = [v1, v2].sort();
+    listStones.add(`${s2} ${s1}`);
+    if (red < 5) {
+      const key = `${s2} ${s1}NoRed`;
+      stats[key] = (stats[key] || 0) + 1;
+    } else {
+      const key = `${s2} ${s1}Red`;
+      stats[key] = (stats[key] || 0) + 1;
+    }
+  }
+  const list = Array.from(listStones).sort().map(name => `| ${name} | ${stats[name+'Red'] || 0} | ${stats[name+'NoRed'] || 0} |`).join('\n');
   const statsMarkdown = `
-  | Stone | Times |
-  | -- | -- |
+  | Stone | Times Red | Times NoRed |
+  | -- | -- | -- |
+  | Total | ${history.length} | ${history.length} |
   ${list}
   `;
 
   return <ReactMarkdown className='noSelects' children={statsMarkdown} remarkPlugins={RemarkGfm}/>;
 };
-
-const addStat = (result1, result2, result3) => {
-  const stats = getStoneStats() || {};
-  for (const txt of listStones) {
-    if (txt === 'Total') continue;
-    const [threshold1, threshold2] = txt.split(' ').map(x => parseInt(x));
-    if (result1 < threshold1) continue;
-    if (result2 < threshold2) continue;
-    if (result3 >= 5) continue;
-    console.log(result1, result2, threshold1, threshold2);
-    stats[txt] = (stats[txt] || 0) + 1;
-  }
-  stats.Total = (stats.Total || 0) + 1;
-  setStoneStats(stats);
-}
 
 export const StonePractice = props => {
   const [numDots, setNumDots] = useState(DEFAULT_DOTS);
@@ -100,22 +105,40 @@ export const StonePractice = props => {
   const refStoneRow2 = useRef();
   const refStoneRow3 = useRef();
   const [history, setHistory] = useState('');
+  const [started, setStarted] = useState(false);
+  const [finished, setFinished] = useState(0);
 
-  const reset = () => {
+  const saveHistory = () => {
     const vals= [
       refStoneRow1.current?.value || 0,
       refStoneRow2.current?.value || 0,
       refStoneRow3.current?.value || 0,
     ];
-    
-    if (vals.filter(v => v).length > 0) {
-      addStat(...vals);
-      setHistory(`- ${vals.join(', ')}\n` + history);
+    const history2 = getStoneStats() instanceof Array ? getStoneStats() : [];
+    history2.push(vals);
+    setStoneStats(history2)
+    setHistory(`- ${vals.join(', ')}\n` + history);
+  }
+
+  const reset = () => {
+    if (started && finished !== 3) {
+      saveHistory();
     }
     setStoneRowKey(Date.now());
     setStoneStatsKey(Date.now());
     setProb(DEFAULT_PROB);
+    setStarted(false);
+    setFinished(0);
   }
+
+  const onStart = () => setStarted(true);
+  const onFinish = () => {
+    if (finished + 1 === 3) {
+      saveHistory();
+    }
+    setFinished(finished + 1);
+  }
+  const rowProps = {minWidth: 40, onStart, onFinish, numDots, prob, setProb};
 
   return (
     <DismissDialog title="Lost Ark Stone Practice" {...props} className="medium-modal">
@@ -124,9 +147,9 @@ export const StonePractice = props => {
         reset();
       }}></input> <br/> <br/>
       <div key={`stoneRow-${stoneRowKey}`}>
-        <StoneRow refTotal={refStoneRow1} numDots={numDots} name="1" minWidth={40} setProb={setProb} prob={prob}/> <br/>
-        <StoneRow refTotal={refStoneRow2} numDots={numDots} name="2" minWidth={40} setProb={setProb} prob={prob}/> <br/>
-        <StoneRow refTotal={refStoneRow3} numDots={numDots} name="R" minWidth={40} setProb={setProb} prob={prob}/> <br/>
+        <StoneRow refTotal={refStoneRow1} name="1" {...rowProps}/> <br/>
+        <StoneRow refTotal={refStoneRow2} name="2" {...rowProps}/> <br/>
+        <StoneRow refTotal={refStoneRow3} name="R" {...rowProps}/> <br/>
       </div>
       Probability: {prob}% <br/> <br/>
       <button onClick={reset}>RESET</button> <br/>
