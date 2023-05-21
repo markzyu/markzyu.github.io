@@ -21,11 +21,11 @@ import { OLEDSaver } from '../components/OLEDSaver.js';
 import { StonePractice } from '../components/StonePractice.js';
 
 const dialogConfig = {
-  'about-me': {title: 'About Me', Component: AboutMeDialog, icon: faCircleInfo, noposition: true, iconClass: 'fixedAboutMe', color: '#71b1cd'},
+  'about-me': {title: 'About Me', Component: AboutMeDialog},  //, icon: faCircleInfo, noposition: true, iconClass: 'fixedAboutMe', color: '#71b1cd'},
   'credits': {title: 'Credits', Component: CreditsDialog},
-  'exhibit-a': {title: 'Exhibit: A', Component: ExhibitADialog, icon: faCalendarCheck, noposition: true, iconClass: 'fixedExhibitA', color: '#3d8daf'},
-  'exhibit-b': {title: 'Exhibit: B', Component: ExhibitBDialog, icon: faBoxArchive, noposition: true, iconClass: 'fixedExhibitB', color: '#1d4454'},
-  'exhibit-c': {title: 'Exhibit: C', Component: ExhibitCDialog, icon: faTrashCan, noposition: true, iconClass: 'fixedExhibitC', color: 'red'},
+  'exhibit-a': {title: 'Exhibit: A', Component: ExhibitADialog},  //, icon: faCalendarCheck, noposition: true, iconClass: 'fixedExhibitA', color: '#3d8daf'},
+  'exhibit-b': {title: 'Exhibit: B', Component: ExhibitBDialog},  //, icon: faBoxArchive, noposition: true, iconClass: 'fixedExhibitB', color: '#1d4454'},
+  'exhibit-c': {title: 'Exhibit: C', Component: ExhibitCDialog},  //, icon: faTrashCan, noposition: true, iconClass: 'fixedExhibitC', color: 'red'},
   'not-found': {title: 'Page Not Found', Component: NotFoundDialog},
   'tts-app': {title: 'TTSApp', Component: TTSApp},
   'oled-saver': {title: 'OLED Saver', Component: OLEDSaver},

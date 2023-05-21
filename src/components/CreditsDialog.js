@@ -2,6 +2,9 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 import DismissDialog from '../components/DismissDialog';
+import packageJson from '../../package.json';
+
+const dependencies = Object.keys(packageJson.dependencies).map(name => `- ${name}`);
 
 const content = `
 This web app wouldn't be possible without the following artworks.
@@ -10,13 +13,16 @@ This web app wouldn't be possible without the following artworks.
 - [React.js](https://github.com/facebook/react)
 - [XP.css](https://github.com/botoxparty/XP.css)
 - [Fontawesome icons](https://fontawesome.com/v6/search)
-- [All other open source dependencies](https://github.com/markzyu/markzyu.github.io/blob/master/package.json#L5-L20)
 `
 
 export const CreditsDialog = props => {
   return (
     <DismissDialog title="Credits" {...props} className="medium-modal">
       <ReactMarkdown linkTarget='_blank' className='noSelects' children={content}/>
+      <details className='noSelects'>
+        <summary>All open source dependencies</summary>
+        <ReactMarkdown className='noSelects' children={dependencies.join('\n')} />
+      </details>
     </DismissDialog>
   )
 };
