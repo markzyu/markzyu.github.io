@@ -104,7 +104,9 @@ export const StonePractice = props => {
   const refStoneRow1 = useRef();
   const refStoneRow2 = useRef();
   const refStoneRow3 = useRef();
-  const [history, setHistory] = useState('');
+  const [history, setHistory] = useState(
+    (getStoneStats() instanceof Array ? getStoneStats() : []).reverse().map(x => `- ${x.join(', ')}`).join('\n')
+  );
   const [started, setStarted] = useState(false);
   const [finished, setFinished] = useState(0);
 
