@@ -37,9 +37,9 @@ export const StoneRow = ({numDots, refTotal, name, minWidth, prob, setProb}) => 
 
   return (
     <div style={{display: 'flex', justifyContent: 'space-around', width: '100%'}}>
-      <button style={{minWidth}} onClick={onClick}>{name}</button> 
-      {markers}
       <span><b>{total}</b></span>
+      {markers}
+      <button style={{minWidth}} onClick={onClick}>{name}</button> 
     </div>
   )
 }
