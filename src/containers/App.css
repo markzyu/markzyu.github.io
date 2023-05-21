@@ -95,3 +95,16 @@ html, body, #root {
 button  {
   user-select: none;
 }
+
+table {
+  width: 100%;
+}
+
+table {
+    border:none;
+    border-collapse: collapse;
+}
+
+table td, table th {
+    border: 1px solid;
+}
