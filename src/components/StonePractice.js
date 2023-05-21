@@ -63,14 +63,14 @@ export const StonePractice = props => {
         setNumDots(parseInt(e.target.value) || 0);
         setStoneRowKey(Date.now());
       }}></input> <br/>
-      <button onClick={() => setStoneRowKey(Date.now())}>RESET</button> <br/>
       <div key={stoneRowKey}>
         <StoneRow numDots={numDots} name="1" minWidth={40} setProb={setProb} prob={prob}/>
         <StoneRow numDots={numDots} name="2" minWidth={40} setProb={setProb} prob={prob}/>
         <StoneRow numDots={numDots} name="R" minWidth={40} setProb={setProb} prob={prob}/>
       </div>
       <br/>
-      Probability: {prob}%
+      Probability: {prob}% <br/>
+      <button onClick={() => setStoneRowKey(Date.now())}>RESET</button> <br/>
     </DismissDialog>
   )
 };
