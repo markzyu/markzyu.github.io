@@ -6,10 +6,10 @@ import DismissDialog from '../components/DismissDialog';
 const content = `
 This web app wouldn't be possible without the following artworks.
 
-- Wallpaper credits to [Remedy](https://www.remedygames.com/)
+- Wallpaper is from the game "Control". Credits to [Remedy](https://www.remedygames.com/)
 - [React.js](https://github.com/facebook/react)
 - [XP.css](https://github.com/botoxparty/XP.css)
-- Loading GIF credits to asdasdasdas, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Ajux_loader.gif)
+- [Fontawesome icons](https://fontawesome.com/v6/search)
 - [All other open source dependencies](https://github.com/markzyu/markzyu.github.io/blob/master/package.json#L5-L20)
 `
 

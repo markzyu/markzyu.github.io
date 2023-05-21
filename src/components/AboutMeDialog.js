@@ -9,8 +9,7 @@ looking to focus more on software development, with 3 years of
 professional experience developing containerized backend services, 
 and with casual, self-motivated frontend projects in Javascript, 
 React, Redux, Android, and Firebase.
-
-For more information, please refer to his [Resume](/Resume.pdf).`
+`
 
 export const AboutMeDialog = props => {
   return (

@@ -7,7 +7,7 @@ import './App.css';
 import UserAgreementDialog from './UserAgreementDialog.js';
 import { setTheme } from '../actions/index.js';
 import { DesktopIcon } from '../components/DesktopIcon.js';
-import { faBoxArchive, faCalendarCheck, faCircleInfo, faCopyright, faRecycle, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faBoxArchive, faCalendarCheck, faCircleInfo, faCopyright, faGem, faRecycle, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { AboutMeDialog } from '../components/AboutMeDialog.js';
 import { CreditsDialog } from '../components/CreditsDialog.js';
 import { ExhibitADialog } from '../components/ExhibitADialog.js';
@@ -20,29 +20,19 @@ import { TTSApp } from '../components/TTSApp.js';
 import { OLEDSaver } from '../components/OLEDSaver.js';
 import { StonePractice } from '../components/StonePractice.js';
 
-const validAppIds = new Set([
-  'about-me',
-  'credits',
-  'exhibit-a',
-  'exhibit-b',
-  'exhibit-c',
-  'not-found',
-  'tts-app',
-  'oled-saver',
-  'stone-practice',
-]);
-
-const titles = {
-  'about-me': 'About Me',
-  'credits': 'Credits',
-  'exhibit-a': 'Exhibit A',
-  'exhibit-b': 'Exhibit B',
-  'exhibit-c': 'Exhibit C',
-  'not-found': 'Page Not Found',
-  'tts-app': 'TTSApp',
-  'oled-saver': 'OLED Saver',
-  'stone-practice': 'Lost Ark Stone Practice',
+const dialogConfig = {
+  'about-me': {title: 'About Me', Component: AboutMeDialog, icon: faCircleInfo, noposition: true, iconClass: 'fixedAboutMe', color: '#71b1cd'},
+  'credits': {title: 'Credits', Component: CreditsDialog},
+  'exhibit-a': {title: 'Exhibit: A', Component: ExhibitADialog, icon: faCalendarCheck, noposition: true, iconClass: 'fixedExhibitA', color: '#3d8daf'},
+  'exhibit-b': {title: 'Exhibit: B', Component: ExhibitBDialog, icon: faBoxArchive, noposition: true, iconClass: 'fixedExhibitB', color: '#1d4454'},
+  'exhibit-c': {title: 'Exhibit: C', Component: ExhibitCDialog, icon: faTrashCan, noposition: true, iconClass: 'fixedExhibitC', color: 'red'},
+  'not-found': {title: 'Page Not Found', Component: NotFoundDialog},
+  'tts-app': {title: 'TTSApp', Component: TTSApp},
+  'oled-saver': {title: 'OLED Saver', Component: OLEDSaver},
+  'stone-practice': {title: 'Lost Ark Stone Practice', Component: StonePractice, icon: faGem},
 };
+
+const validAppIds = new Set(Object.keys(dialogConfig));
 
 const DEFAULT_TITLE = "Mark Yu's homepage";
 
@@ -57,7 +47,7 @@ const App = props => {
   const [visibleDialogs, setVisibleDialogs] = useState(new Set(appId ? [appId]: []));
 
   if (appId) {
-    document.title = titles[appId];
+    document.title = dialogConfig[appId].title;
     history.replace(`/${appId}`);
   }
   else {
@@ -121,33 +111,27 @@ const App = props => {
     history.replace('/');
   }
 
+  const icons = Object.entries(dialogConfig).filter(([_, {icon}]) => icon).map(([id, {icon, title, iconClass, noposition, color}]) => (
+    <DesktopIcon icon={icon} className={iconClass} noposition={noposition} textColor={color} iconColor={color} 
+    title={title} linkName={`/${id}`} onClick={() => helpSetShow(id, true)} key={`icon-${id}`} />
+  ));
+
+  const dialogs = Object.entries(dialogConfig).map(([id, {Component}]) => (
+    <Component key={`dialog-${id}`} {...dialogProp(id)}/>
+  ));
+
   return (
     <div style={{height: '100%', width: '100%'}}>
       <link rel='stylesheet' type='text/css' href={props.themeCssPath} />
       <div style={{flexDirection: 'row'}}>
         <div style={{flexDirection: 'column'}}>
           <DesktopIcon icon={faCopyright} title='Credits' linkName='/credits' onClick={setShow('credits')}/>
+          {icons}
           {anyShowing && <DesktopIcon icon={faRecycle} title='Change Theme' onClick={changeTheme}/>}
         </div>
       </div>
       <br/>
-      <DesktopIcon icon={faCircleInfo} title='About me' linkName='/about-me' onClick={setShow('about-me')}
-        className="fixedAboutMe" noposition={true} textColor='#71b1cd' iconColor='#71b1cd' />
-      <DesktopIcon icon={faCalendarCheck} title='Exhibit: A' linkName='/exhibit-a' onClick={setShow('exhibit-a')}
-        className="fixedExhibitA" noposition={true} textColor='#3d8daf' iconColor='#3d8daf' />
-      <DesktopIcon icon={faBoxArchive} title='Exhibit: B' linkName='/exhibit-b' onClick={setShow('exhibit-b')}
-        className="fixedExhibitB" noposition={true} textColor='#1d4454' iconColor='#1d4454' />
-      <DesktopIcon icon={faTrashCan} title='Exhibit: C' linkName='/exhibit-c' onClick={setShow('exhibit-c')}
-        className="fixedExhibitC" noposition={true} textColor='red' iconColor='darkred'/>
-      <AboutMeDialog {...dialogProp('about-me')} />
-      <TTSApp {...dialogProp('tts-app')} />
-      <OLEDSaver {...dialogProp('oled-saver')} />
-      <StonePractice {...dialogProp('stone-practice')} />
-      <ExhibitCDialog {...dialogProp('exhibit-c')} />
-      <ExhibitBDialog {...dialogProp('exhibit-b')} />
-      <ExhibitADialog {...dialogProp('exhibit-a')} />
-      <CreditsDialog {...dialogProp('credits')} />
-      <NotFoundDialog {...dialogProp('not-found')} />
+      {dialogs}
       <ErrorDialog />
       <UserAgreementDialog />
     </div>

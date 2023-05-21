@@ -11,6 +11,8 @@ come back to them later.
 This app is invite-only. It enables multiple users to edit or view Markdown documents together. 
 For those with an invite, [here is a link to the website](https://markzyu.netlify.app/MentalGraph/).
 
+- [Password hasher](https://markzyu.github.io/password-hasher/): a password manager that doesn't store the passwords directly.
+
 - BackupTrackerSheet: A Python program that can be used to track important files and their
 backups across multiple hard drives.
 

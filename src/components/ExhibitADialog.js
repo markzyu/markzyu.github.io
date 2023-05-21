@@ -4,12 +4,9 @@ import ReactMarkdown from 'react-markdown';
 import DismissDialog from './DismissDialog';
 
 const content = `
-I'm currently working on these projects:
+I am currently employed and not seeking new jobs. Current hobby projects:
 
-- This homepage.
-- [Password hasher](https://markzyu.github.io/password-hasher/): a password manager that doesn't store the passwords directly.
-- Twitch streamer's helper app: it discreetly notifies a streamer about stream quality, chats, and new
-followers, in real time, and has proven useful in 110+ Twitch streams
+- Hidden features on this homepage.
 `
 
 export const ExhibitADialog = props => {
