@@ -24,17 +24,17 @@ const fakeLoad = () => {
 
 test('renders nothing when not loaded', () => {
   const app = exampleApp();
-  expect(app.container).not.toHaveTextContent("About me");
+  expect(app.container).not.toHaveTextContent("About Me");
 });
 
 test('renders ok when loaded', () => {
   const app = exampleApp();
   fakeLoad();
-  expect(app.container).toHaveTextContent("About me");
+  expect(app.container).toHaveTextContent("About Me");
 });
 
-const click = (app, txt) => {
-  const btn = app.getByText(txt);
+const click = (app, txt, txtSelector = 'span') => {
+  const btn = app.getByText(txt, {selector: txtSelector});
   expect(btn).toBeVisible();
   fireEvent.click(btn);
 };
@@ -47,7 +47,7 @@ test('title and url change upon opening dialog', () => {
   expect(document.title).toBe("Mark Yu's homepage");
   expect(document.location.href).toBe("http://localhost/");
 
-  click(app, "About me");
+  click(app, "About Me");
   expect(document.title).toBe("About Me");
   expect(document.location.href).toBe("http://localhost/about-me");
 });
@@ -60,19 +60,19 @@ test('title and url change upon switching dialogs', () => {
   expect(document.title).toBe("Mark Yu's homepage");
   expect(document.location.href).toBe("http://localhost/");
 
-  click(app, "About me");
+  click(app, "About Me");
   expect(document.title).toBe("About Me");
   expect(document.location.href).toBe("http://localhost/about-me");
   click(app, "Exhibit: A");
-  expect(document.title).toBe("Exhibit A");
+  expect(document.title).toBe("Exhibit: A");
   expect(document.location.href).toBe("http://localhost/exhibit-a");
-  click(app, "About me");
+  click(app, "About Me");
   expect(document.title).toBe("About Me");
   expect(document.location.href).toBe("http://localhost/about-me");
 });
 
-const closeDialog = (app, txt) => {
-  const title = app.getByText(txt);
+const closeDialog = (app, txt, dialogSelector='.title-bar-text') => {
+  const title = app.getByText(txt, {selector: dialogSelector});
   const btn = title.parentElement.getElementsByTagName('button')[0];
   expect(title).toBeVisible();
   expect(btn).toBeVisible();
@@ -87,11 +87,11 @@ test('title and url change upon closing dialog', () => {
   expect(document.title).toBe("Mark Yu's homepage");
   expect(document.location.href).toBe("http://localhost/");
 
-  click(app, "About me");
+  click(app, "About Me");
   expect(document.title).toBe("About Me");
   expect(document.location.href).toBe("http://localhost/about-me");
   click(app, "Exhibit: A");
-  expect(document.title).toBe("Exhibit A");
+  expect(document.title).toBe("Exhibit: A");
   expect(document.location.href).toBe("http://localhost/exhibit-a");
 
   closeDialog(app, "Exhibit A");
