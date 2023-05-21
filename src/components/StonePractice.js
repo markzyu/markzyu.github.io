@@ -41,6 +41,7 @@ export const StoneRow = ({numDots, name, minWidth, prob, setProb}) => {
 }
 
 const DEFAULT_DOTS = 10;
+const DEFAULT_PROB = 75;
 const SUCCESS_PROB = -10;
 const FAIL_PROB = 10;
 const MAX_PROB = 75;
@@ -55,13 +56,18 @@ const regulateMinMaxProb = (v) => {
 export const StonePractice = props => {
   const [numDots, setNumDots] = useState(DEFAULT_DOTS);
   const [stoneRowKey, setStoneRowKey] = useState(0);
-  const [prob, setProb] = useState(75);
+  const [prob, setProb] = useState(DEFAULT_PROB);
+
+  const reset = () => {
+    setStoneRowKey(Date.now());
+    setProb(DEFAULT_PROB);
+  }
 
   return (
     <DismissDialog title="Lost Ark Stone Practice" {...props} className="medium-modal">
       Num of dots: <input value={numDots} onChange={e => {
         setNumDots(parseInt(e.target.value) || 0);
-        setStoneRowKey(Date.now());
+        reset();
       }}></input> <br/> <br/>
       <div key={stoneRowKey}>
         <StoneRow numDots={numDots} name="1" minWidth={40} setProb={setProb} prob={prob}/> <br/>
@@ -69,7 +75,7 @@ export const StonePractice = props => {
         <StoneRow numDots={numDots} name="R" minWidth={40} setProb={setProb} prob={prob}/> <br/>
       </div>
       Probability: {prob}% <br/> <br/>
-      <button onClick={() => setStoneRowKey(Date.now())}>RESET</button> <br/>
+      <button onClick={reset}>RESET</button> <br/>
     </DismissDialog>
   )
 };
