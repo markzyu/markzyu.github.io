@@ -18,6 +18,7 @@ import { NotFoundDialog } from '../components/NotFoundDialog.js';
 import history from '../history.js';
 import { TTSApp } from '../components/TTSApp.js';
 import { OLEDSaver } from '../components/OLEDSaver.js';
+import { StonePractice } from '../components/StonePractice.js';
 
 const validAppIds = new Set([
   'about-me',
@@ -28,6 +29,7 @@ const validAppIds = new Set([
   'not-found',
   'tts-app',
   'oled-saver',
+  'stone-practice',
 ]);
 
 const titles = {
@@ -39,6 +41,7 @@ const titles = {
   'not-found': 'Page Not Found',
   'tts-app': 'TTSApp',
   'oled-saver': 'OLED Saver',
+  'stone-practice': 'Lost Ark Stone Practice',
 };
 
 const DEFAULT_TITLE = "Mark Yu's homepage";
@@ -139,6 +142,7 @@ const App = props => {
       <AboutMeDialog {...dialogProp('about-me')} />
       <TTSApp {...dialogProp('tts-app')} />
       <OLEDSaver {...dialogProp('oled-saver')} />
+      <StonePractice {...dialogProp('stone-practice')} />
       <ExhibitCDialog {...dialogProp('exhibit-c')} />
       <ExhibitBDialog {...dialogProp('exhibit-b')} />
       <ExhibitADialog {...dialogProp('exhibit-a')} />
