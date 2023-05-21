@@ -40,7 +40,7 @@ export const StoneRow = ({numDots, name, minWidth, prob, setProb}) => {
   )
 }
 
-const DEFAULT_DOTS = 9;
+const DEFAULT_DOTS = 10;
 const SUCCESS_PROB = -10;
 const FAIL_PROB = 10;
 const MAX_PROB = 75;
