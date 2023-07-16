@@ -134,10 +134,11 @@ const cacheSpeak = async (dirHandle, funcName = "speakTextAsync", ai, content) =
   return blob;
 }
 
-let audioCtx = new AudioContext();
+let audioCtx = null;
 const audioElemToAudioNode = new WeakMap();
 
-const reInitAudioContext = () => {
+const initAudioContext = () => {
+  if (audioCtx) return;
   audioCtx = new AudioContext();
 }
 
@@ -257,7 +258,7 @@ export const TTSApp = props => {
 
   const onOpenProject = async () => {
     // Without this, video will have no sound or be stuck (permission issue with audio context)
-    reInitAudioContext();
+    initAudioContext();
 
     const newDirHandle = await window.showDirectoryPicker({mode: "readwrite"});
     onOpenSubtitleFile(await newDirHandle.getFileHandle('subtitle.ass'));
