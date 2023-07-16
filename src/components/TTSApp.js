@@ -62,8 +62,7 @@ const addPercentStrings = (a, b) => {
 }
 
 // WARNING: Azure only supports changing emotion once per sentence anyways, so we only allow one per segment
-const makeSSML = ({ text = '', emotion = 'general', voiceName = 'en-US-JennyNeural', pitch = '0%', rate = '0%', config }) => {
-  let volume = "100%";
+const makeSSML = ({ text = '', emotion = 'general', voiceName = 'en-US-JennyNeural', pitch = '0%', rate = '0%', volume='100%', config }) => {
   const origTextParts = textToParts(text, config?.textSymbols);
   const textParts = origTextParts.flatMap(part => {
     if (part.command) {
