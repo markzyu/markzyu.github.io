@@ -307,7 +307,6 @@ export const TTSApp = props => {
     const audioNode = lookupAudioNode(refVideo.current);
     const addNodes = Array.from(currentEqConfig);
     addNodes.push(audioCtx.destination);
-    audioNode.disconnect();
     let prevNode = audioNode;
     for (const addNode of addNodes) {
       console.log("Connecting audio node:", addNode);
