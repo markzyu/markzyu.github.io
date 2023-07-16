@@ -134,8 +134,12 @@ const cacheSpeak = async (dirHandle, funcName = "speakTextAsync", ai, content) =
   return blob;
 }
 
-const audioCtx = new AudioContext();
+let audioCtx = new AudioContext();
 const audioElemToAudioNode = new WeakMap();
+
+const reInitAudioContext = () => {
+  audioCtx = new AudioContext();
+}
 
 const lookupAudioNode = (audioElem) => {
   const maybeExistingNode = audioElemToAudioNode.get(audioElem);
@@ -252,6 +256,9 @@ export const TTSApp = props => {
   }
 
   const onOpenProject = async () => {
+    // Without this, video will have no sound or be stuck (permission issue with audio context)
+    reInitAudioContext();
+
     const newDirHandle = await window.showDirectoryPicker({mode: "readwrite"});
     onOpenSubtitleFile(await newDirHandle.getFileHandle('subtitle.ass'));
     onOpenVideoFile(await newDirHandle.getFileHandle('video.mp4'));
@@ -307,6 +314,7 @@ export const TTSApp = props => {
     const audioNode = lookupAudioNode(refVideo.current);
     const addNodes = Array.from(currentEqConfig);
     addNodes.push(audioCtx.destination);
+    audioNode.disconnect();
     let prevNode = audioNode;
     for (const addNode of addNodes) {
       console.log("Connecting audio node:", addNode);
