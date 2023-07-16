@@ -135,6 +135,17 @@ const cacheSpeak = async (dirHandle, funcName = "speakTextAsync", ai, content) =
   return blob;
 }
 
+const audioCtx = new AudioContext();
+const audioElemToAudioNode = new WeakMap();
+
+const lookupAudioNode = (audioElem) => {
+  const maybeExistingNode = audioElemToAudioNode.get(audioElem);
+  if (maybeExistingNode) return maybeExistingNode;
+
+  const newNode = audioCtx.createMediaElementSource(audioElem);
+  audioElemToAudioNode.set(audioElem, newNode);
+  return newNode;
+}
 
 export const TTSApp = props => {
   const [dirHandle, setDirHandle] = useState(null);
@@ -156,7 +167,15 @@ export const TTSApp = props => {
   const startTime = currentSubtitle?.Start && parseDuration(currentSubtitle?.Start);
   const endTime = currentSubtitle?.End && parseDuration(currentSubtitle?.End);
 
-  if (refVideo.current) refVideo.current.volume = 0.4;
+  // This must be a list of jsons: [{type: "lowshelf", frequency: 1000, gain: 25}]
+  const currentEqConfig = Array.from(voicesJson?.equalizerConfig || []).map(({type, frequency, gain, Q}) => {
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = type;
+    if (frequency) filter.frequency.value = frequency;
+    if (gain) filter.gain.value = gain;
+    if (Q) filter.Q.value = Q;
+    return filter;
+  });
 
   useEffect(() => {
     const key = secretsJson?.azure_tts_key?.key;
@@ -186,10 +205,12 @@ export const TTSApp = props => {
     const [url, volume] = await fetchVoiceURL(subtitleIdx);
     setAudioUrl(url);
     setTimeout(() => {
+      // Setup audio & video volumes.
       const audioPlaybackRate = refAudio.current.duration / (endTime - startTime);
       if (!avoidPlayingVideo) refVideo.current.currentTime = startTime;
       refAudio.current.volume = parseInt(volume) / 100;
       refAudio.current.playbackRate = audioPlaybackRate;
+
       avoidPlayingVideo || refVideo.current.play();
       refAudio.current.play();
     }, 100);
@@ -283,6 +304,19 @@ export const TTSApp = props => {
     setSubtitleIdx((subtitleIdx + 1) % subtitleData.length);
   }
   const onPlay = () => {
+    // Setup equalizer for the video
+    const audioNode = lookupAudioNode(refVideo.current);
+    const addNodes = Array.from(currentEqConfig);
+    addNodes.push(audioCtx.destination);
+    audioNode.disconnect();
+    let prevNode = audioNode;
+    for (const addNode of addNodes) {
+      console.log("Connecting audio node:", addNode);
+      prevNode.connect(addNode);
+      prevNode = addNode;
+    }
+    refVideo.current.volume = voicesJson?.videoVolume || 0.4;
+
     refVideo.current?.play();
     isContinuousPlay.current = true;
     updateSpeechConfig();
